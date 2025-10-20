@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Simone Tuccio — non voglio vivere più nella realtà.</title>
+  <meta name="description" content="Simone Tuccio — artista siciliano a Milano. Fuori ora 'Inesorabilmente'. Ascolta su Spotify, guarda il video e scopri EP e date." />
+  <meta property="og:title" content="Nome Artista — Official Site" />
+  <meta property="og:description" content="Ascolta le ultime uscite, guarda i video e scopri le date." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="assets/header-st.jpg" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='%23fff'/><text x='50' y='60' font-size='48' text-anchor='middle' fill='%23000'>♪</text></svg>">
+  <style>
+    :root{
+      --bg1:#0f0c29; --bg2:#302b63; --bg3:#24243e; --glass:rgba(255,255,255,.1); --glass-2:rgba(255,255,255,.08); --txt:#f4f6fb; --muted:#b9bed5; --accent:#7cf8d1;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font-family:'Poppins',system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,'Helvetica Neue',Arial; color:var(--txt); background:radial-gradient(1000px 600px at 10% -10%,#3b1c5a 0%, transparent 60%), radial-gradient(800px 500px at 110% 10%,#1e6b6b 0%, transparent 55%), linear-gradient(135deg,var(--bg1),var(--bg2),var(--bg3));
+      overflow-x:hidden;
+    }
+    /* Animated background orbs */
+    .orbs{position:fixed; inset:0; z-index:-1; filter:blur(80px); opacity:.5;}
+    .orb{position:absolute; width:38vmax; height:38vmax; border-radius:50%; background:conic-gradient(from 0deg, #8ef3ff, #ff71e9, #ffd36b, #8ef3ff); mix-blend-mode:screen; animation:float 14s ease-in-out infinite alternate;}
+    .orb.o2{right:-10vw; top:-10vh; animation-duration:18s}
+    .orb.o3{left:20vw; bottom:-15vh; animation-duration:20s}
+    @keyframes float{to{transform:translate3d(3vw, -2vh,0) rotate(30deg)}}
+
+    header{position:sticky; top:0; backdrop-filter:saturate(160%) blur(10px); background:linear-gradient(180deg, rgba(0,0,0,.35), transparent); z-index:10;}
+    .nav{display:flex; align-items:center; justify-content:space-between; padding:14px 6vw;}
+    .logo{display:flex; gap:12px; align-items:center; font-weight:800; letter-spacing:.5px}
+    .logo .mark{width:36px; height:36px; display:grid; place-items:center; border-radius:12px; background:linear-gradient(135deg,#aefbff,#f9b4ff)}
+    .nav a{color:var(--txt); text-decoration:none; opacity:.9; margin:0 12px}
+    .nav a:hover{opacity:1}
+
+    .btn{appearance:none; border:1px solid rgba(255,255,255,.25); padding:12px 18px; border-radius:14px; color:var(--txt); background:linear-gradient(180deg, var(--glass), var(--glass-2)); backdrop-filter: blur(8px) saturate(140%); text-decoration:none; display:inline-flex; gap:8px; align-items:center; transition:.25s transform, .25s box-shadow, .25s background; box-shadow:0 8px 30px rgba(0,0,0,.25)}
+    .btn:hover{transform:translateY(-2px); box-shadow:0 12px 36px rgba(0,0,0,.35)}
+    .btn.primary{border-color:transparent; background:linear-gradient(135deg,#b1ffec,#b0b2ff); color:#0b0f19}
+
+    .container{max-width:1200px; margin:0 auto; padding:0 6vw}
+
+    /* HERO */
+    .hero{display:grid; grid-template-columns: 1.1fr .9fr; align-items:center; gap:40px; padding:8vh 0 10vh}
+    .tag{font-size:12px; letter-spacing:.18em; text-transform:uppercase; color:var(--muted)}
+    h1{font-size:clamp(40px,6vw,72px); line-height:1.02; margin:.2em 0 .3em;}
+    .lead{font-weight:300; color:var(--muted); max-width:55ch}
+    .cta{display:flex; gap:12px; margin-top:22px; flex-wrap:wrap}
+    .avatar{position:relative; width:min(420px, 70vw); aspect-ratio:1/1; margin:0 auto; border-radius:30px; overflow:hidden;}
+    .avatar img{width:100%; height:100%; object-fit:cover; filter:contrast(1.05) saturate(1.15)}
+    .avatar::after{content:""; position:absolute; inset:0; background:radial-gradient(60% 60% at 50% 90%, rgba(255,255,255,.25), transparent 60%)}
+
+    /* MUSIC SECTION */
+    section{padding:8vh 0}
+    .section-head{display:flex; align-items:baseline; justify-content:space-between; gap:16px; margin-bottom:18px}
+    .section-head h2{font-size:clamp(28px,3.6vw,44px); margin:0}
+    .muted{color:var(--muted)}
+    .card{background:linear-gradient(180deg, var(--glass), var(--glass-2)); border:1px solid rgba(255,255,255,.16); border-radius:18px; box-shadow:0 8px 30px rgba(0,0,0,.25)}
+
+    .tabs{display:flex; gap:8px; flex-wrap:wrap}
+    .tab{cursor:pointer; padding:10px 14px; border-radius:12px; border:1px solid rgba(255,255,255,.15); background:rgba(255,255,255,.06)}
+    .tab[aria-selected="true"]{background:linear-gradient(135deg,#b1ffec55,#b0b2ff55); color:#10121a}
+
+    .players{display:grid; grid-template-columns:1.2fr .8fr; gap:20px}
+    .embed{aspect-ratio:16/9; width:100%; border:0; border-radius:16px}
+
+    .video-list{display:grid; grid-template-columns:1fr; gap:10px; max-height:460px; overflow:auto}
+    .video-item{display:flex; align-items:center; gap:12px; padding:8px; border-radius:12px; cursor:pointer; border:1px solid rgba(255,255,255,.12); background:rgba(255,255,255,.04)}
+    .video-item img{width:120px; height:68px; object-fit:cover; border-radius:8px}
+    .video-item:hover{background:rgba(255,255,255,.08)}
+
+    /* GRID sections */
+    .grid{display:grid; gap:18px; grid-template-columns:repeat(3,1fr)}
+    .grid .card{padding:18px}
+
+    .gallery{display:grid; gap:10px; grid-template-columns:repeat(6,1fr)}
+    .gallery img{width:100%; height:200px; object-fit:cover; border-radius:14px}
+    .gallery .wide{grid-column:span 3}
+    .gallery .tall{grid-row:span 2; height:410px}
+
+    footer{padding:8vh 6vw; color:var(--muted)}
+
+    @media (max-width: 960px){
+      .hero{grid-template-columns:1fr; text-align:center}
+      .players{grid-template-columns:1fr}
+      .grid{grid-template-columns:1fr}
+      .gallery{grid-template-columns:repeat(2,1fr)}
+    }
+    </style>
+  <!-- SEO: JSON-LD MusicGroup + recordings -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "MusicGroup",
+    "name": "Simone Tuccio",
+    "genre": ["Indie", "Pop", "Alt"],
+    "url": "https://example.com",
+    "image": [
+      "https://images.unsplash.com/photo-1601582585289-7c31b7b58a9e?q=80&w=1200&auto=format&fit=crop"
+    ],
+    "sameAs": [
+      "https://open.spotify.com/intl-it/artist/7dqy9RM6fw0vzbMf4FZUzC",
+      "https://www.youtube.com/watch?v=jYYNTw9SoiE"
+    ],
+    "album": {
+      "@type": "MusicAlbum",
+      "name": "Un EP Indie",
+      "datePublished": "2024-01-01",
+      "byArtist": {"@type": "MusicGroup", "name": "Simone Tuccio"}
+    }
+    },
+    "track": [
+      {"@type":"MusicRecording","name":"Inesorabilmente","inAlbum":"Un EP Indie","url":"https://open.spotify.com/intl-it/album/30S14OrqVQs70QafLc8Krk"}
+    ]
+  }
+  </script>
+</head>
+<body>
+  <!-- ===== Background animated orbs ===== -->
+  <div class="orbs" aria-hidden="true">
+    <div class="orb"></div>
+    <div class="orb o2"></div>
+    <div class="orb o3"></div>
+  </div>
+
+  <!-- ===== NAVBAR ===== -->
+  <header>
+    <div class="nav container">
+      <div class="logo">
+        <div class="mark">🎵</div>
+        <div>Simone <span style="opacity:.7">Tuccio</span></div>
+      </div>
+      <nav>
+        <a href="#musica">Musica</a>
+        <a href="#video">Video</a>
+        <a href="#gallery">Gallery</a>
+        <a href="#contatti">Contatti</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ===== HERO ===== -->
+  <main class="container">
+    <section class="hero">
+      <div>
+        <div class="tag">Nuovo singolo fuori ora</div>
+        <h1>Simone Tuccio</h1>
+        <p class="lead">non voglio vivere più nella realtà.</p>
+        <div class="cta">
+          <a class="btn primary" target="_blank" rel="noopener" href="https://open.spotify.com/intl-it/album/30S14OrqVQs70QafLc8Krk">Ascolta “Inesorabilmente”</a>
+          <a class="btn" target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=jYYNTw9SoiE">Guarda il video</a>
+          <a class="btn" href="#contatti">Booking & Press</a>
+        </div>
+      </div>
+      <div>
+        <figure class="avatar card">
+          <img src="assets/header-st.jpg" alt="Simone Tuccio — header" />
+        </figure>
+      </div>
+    </section>
+
+    <!-- ===== MUSIC (SPOTIFY / YOUTUBE) ===== -->
+    <section id="musica">
+      <div class="section-head">
+        <h2>Ascolta &amp; Guarda</h2>
+        <div class="tabs" role="tablist" aria-label="Sorgente media">
+          <button class="tab" role="tab" aria-selected="true" data-target="#spotifyPane">Spotify</button>
+          <button class="tab" role="tab" aria-selected="false" data-target="#youtubePane">YouTube</button>
+        </div>
+      </div>
+
+      <!-- Spotify Pane -->
+      <div id="spotifyPane" class="card" role="tabpanel">
+        <div style="padding:16px; display:grid; gap:16px;">
+          <p class="muted" style="margin:0">Anteprime ufficiali da Spotify.</p>
+          <div class="grid">
+            <iframe class="embed" style="grid-column:span 3" src="https://open.spotify.com/embed/album/30S14OrqVQs70QafLc8Krk" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+            <iframe class="embed" src="https://open.spotify.com/embed/album/74V12TMSCDf5TIjGYNHjEx" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+            <iframe class="embed" src="https://open.spotify.com/embed/artist/7dqy9RM6fw0vzbMf4FZUzC" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+          </div>
+        </div>
+      </div>
+
+      <!-- YouTube Pane -->
+      <div id="youtubePane" class="card" role="tabpanel" hidden>
+        <div style="padding:16px">
+          <div class="players">
+            <iframe id="ytPlayer" class="embed" src="https://www.youtube.com/embed/jYYNTw9SoiE" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe>
+            <div class="video-list" aria-label="Selezione video">
+              <div class="video-item" data-yt="jYYNTw9SoiE">
+                <img src="https://img.youtube.com/vi/jYYNTw9SoiE/mqdefault.jpg" alt="Inesorabilmente — Official Video" />
+                <div>
+                  <div>Inesorabilmente — Official Video</div>
+                  <div class="muted" style="font-size:12px">Simone Tuccio</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== NEWS / DATES ===== -->
+    <section aria-labelledby="newsTitle">
+      <div class="section-head"><h2 id="newsTitle">Date & News</h2><div class="muted">Nuove date in arrivo…</div></div>
+      <div class="grid">
+        <article class="card">
+          <h3 style="margin:8px 0 6px">Milano — Magnolia</h3>
+          <p class="muted" style="margin:0 0 10px">12 Dic 2025 · Ore 21:00</p>
+          <p>Release party del nuovo EP con band completa e ospiti speciali.</p>
+          <a class="btn" href="#">Biglietti</a>
+        </article>
+        <article class="card">
+          <h3 style="margin:8px 0 6px">Roma — Monk</h3>
+          <p class="muted" style="margin:0 0 10px">20 Gen 2026 · Ore 21:00</p>
+          <p>Showcase elettrico + firmacopie. Posti limitati.</p>
+          <a class="btn" href="#">Prenota</a>
+        </article>
+        <article class="card">
+          <h3 style="margin:8px 0 6px">Press</h3>
+          <p class="muted" style="margin:0 0 10px">Recensioni & interviste</p>
+          <p>“Una voce magnetica e arrangiamenti curati.” — MusicMag</p>
+          <a class="btn" href="#">Cartella stampa</a>
+        </article>
+      </div>
+    </section>
+
+    <!-- ===== BIO ===== -->
+    <section id="bio" aria-labelledby="bioTitle">
+      <div class="section-head">
+        <h2 id="bioTitle">Bio</h2>
+        <div class="muted">Chi è l'artista</div>
+      </div>
+      <div class="grid">
+        <article class="card" style="grid-column:span 2">
+          <p><strong>Simone Tuccio</strong> è un artista siciliano di base a Milano. Nel 2024 lancia l’EP <em>“Un EP Indie”</em> con cui supera i <strong>300.000 ascolti su Spotify</strong> grazie ai singoli “Alaska” ed “Effetto collaterale”. È appena uscito il nuovo singolo <em>“Inesorabilmente”</em>, in attesa del prossimo EP.</p>
+        </article>
+        <aside class="card">
+          <h3 style="margin:6px 0 8px">Highlights</h3>
+          <ul style="margin:0; padding-left:18px; line-height:1.7">
+            <li>1 EP su tutte le piattaforme</li>
+            <li>300.000+ stream complessivi</li>
+            <li>Singoli: “Alaska”, “Effetto collaterale”</li>
+          </ul>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ===== DISCOGRAFIA / RESULTS ===== -->
+    <section id="discografia" aria-labelledby="discTitle">
+      <div class="section-head">
+        <h2 id="discTitle">Discografia & Risultati</h2>
+        <div class="muted">Uscite, numeri, riconoscimenti</div>
+      </div>
+      <div class="grid">
+        <div class="card">
+          <h3 style="margin:6px 0 8px">Inesorabilmente — 2025</h3>
+          <p class="muted">Nuovo singolo</p>
+          <iframe class="embed" src="https://open.spotify.com/embed/album/30S14OrqVQs70QafLc8Krk" loading="lazy" allow="autoplay; clipboard-write; encrypted-media"></iframe>
+          <p style="margin-top:8px">• Video ufficiale su YouTube</p>
+        </div>
+        <div class="card">
+          <h3 style="margin:6px 0 8px">Un EP Indie — 2024</h3>
+          <p class="muted">EP · Indie/Alt</p>
+          <iframe class="embed" src="https://open.spotify.com/embed/album/74V12TMSCDf5TIjGYNHjEx" loading="lazy" allow="autoplay; clipboard-write; encrypted-media"></iframe>
+          <p style="margin-top:8px">• 300.000 stream con i singoli “Alaska” ed “Effetto collaterale”.</p>
+        </div>
+        <div class="card">
+          <h3 style="margin:6px 0 8px">Profilo artista</h3>
+          <p class="muted">Ascolta tutta la discografia</p>
+          <iframe class="embed" src="https://open.spotify.com/embed/artist/7dqy9RM6fw0vzbMf4FZUzC" loading="lazy" allow="autoplay; clipboard-write; encrypted-media"></iframe>
+          <p style="margin-top:8px">• Segui per non perdere le prossime uscite.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== NEWSLETTER ===== -->
+    <section id="newsletter" aria-labelledby="newsTitle2">
+      <div class="section-head">
+        <h2 id="newsTitle2">Newsletter</h2>
+        <div class="muted">Anteprime, date e merch</div>
+      </div>
+      <form class="card" action="https://formspree.io/f/xxxxxxxx" method="POST" style="padding:18px; display:grid; gap:12px">
+        <label> Email
+          <input required name="email" type="email" placeholder="tu@email.com" style="width:100%; margin-top:6px; padding:12px 14px; border-radius:12px; border:1px solid rgba(255,255,255,.2); background:rgba(255,255,255,.06); color:var(--txt)"/>
+        </label>
+        <button class="btn primary" type="submit">Iscriviti</button>
+        <small class="muted">Iscrivendoti accetti la nostra privacy policy.</small>
+      </form>
+    </section>
+
+    <!-- ===== EPK / PRESS KIT ===== -->
+    <section id="epk" aria-labelledby="epkTitle">
+      <div class="section-head">
+        <h2 id="epkTitle">EPK — Electronic Press Kit</h2>
+        <div class="muted">Materiale per stampa e promoter</div>
+      </div>
+      <div class="grid">
+        <div class="card">
+          <h3 style="margin:6px 0 8px">Download</h3>
+          <p>Scarica biografia, press photo e scheda tecnica.</p>
+          <a class="btn" href="assets/EPK_NomeArtista.zip">Scarica .zip</a>
+        </div>
+        <div class="card">
+          <h3 style="margin:6px 0 8px">Contatti stampa</h3>
+          <p class="muted">press@nomeartista.com</p>
+          <a class="btn" href="mailto:press@nomeartista.com">Scrivi</a>
+        </div>
+        <div class="card">
+          <h3 style="margin:6px 0 8px">Scheda tecnica</h3>
+          <p>Stage plot, input list e backline su richiesta.</p>
+          <a class="btn" href="assets/NomeArtista_TechRider.pdf" target="_blank" rel="noopener">Apri PDF</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== GALLERY ===== -->
+    <section id="gallery" aria-labelledby="galleryTitle">
+      <div class="section-head"><h2 id="galleryTitle">Gallery</h2><div class="muted">Live, backstage, artwork</div></div>
+      <div class="gallery">
+        <img class="wide" src="https://images.unsplash.com/photo-1506157786151-b8491531f063?q=80&w=1200&auto=format&fit=crop" alt="Live 1" />
+        <img src="https://images.unsplash.com/photo-1526470608268-f674ce90ebd4?q=80&w=1200&auto=format&fit=crop" alt="Studio 1" />
+        <img class="tall" src="https://images.unsplash.com/photo-1553882800-4047621bd3fb?q=80&w=1200&auto=format&fit=crop" alt="Backstage" />
+        <img src="https://images.unsplash.com/photo-1511379938547-c1f69419868d?q=80&w=1200&auto=format&fit=crop" alt="Strumenti" />
+        <img class="wide" src="https://images.unsplash.com/photo-1464375117522-1311dd7d0cd5?q=80&w=1200&auto=format&fit=crop" alt="Live 2" />
+        <img src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=1200&auto=format&fit=crop" alt="Vinili" />
+      </div>
+    </section>
+
+    <!-- ===== MERCH (opzionale) ===== -->
+    <section id="merch" aria-labelledby="merchTitle">
+      <div class="section-head">
+        <h2 id="merchTitle">Merch</h2>
+        <div class="muted">Supporta il progetto</div>
+      </div>
+      <div class="grid">
+        <div class="card">
+          <h3 style="margin:6px 0 8px">T-shirt Logo</h3>
+          <p class="muted">Cotone bio · Unisex</p>
+          <a class="btn" href="#">Acquista</a>
+        </div>
+        <div class="card">
+          <h3 style="margin:6px 0 8px">Vinile EP</h3>
+          <p class="muted">Edizione limitata</p>
+          <a class="btn" href="#">Preordina</a>
+        </div>
+        <div class="card">
+          <h3 style="margin:6px 0 8px">Poster Tour</h3>
+          <p class="muted">50×70 cm</p>
+          <a class="btn" href="#">Acquista</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== GALLERY ===== -->
+    
+    <section id="gallery" aria-labelledby="galleryTitle">
+      <div class="section-head"><h2 id="galleryTitle">Gallery</h2><div class="muted">Live, backstage, artwork</div></div>
+      <div class="gallery">
+        <img class="wide" src="https://images.unsplash.com/photo-1506157786151-b8491531f063?q=80&w=1200&auto=format&fit=crop" alt="Live 1" />
+        <img src="https://images.unsplash.com/photo-1526470608268-f674ce90ebd4?q=80&w=1200&auto=format&fit=crop" alt="Studio 1" />
+        <img class="tall" src="https://images.unsplash.com/photo-1553882800-4047621bd3fb?q=80&w=1200&auto=format&fit=crop" alt="Backstage" />
+        <img src="https://images.unsplash.com/photo-1511379938547-c1f69419868d?q=80&w=1200&auto=format&fit=crop" alt="Strumenti" />
+        <img class="wide" src="https://images.unsplash.com/photo-1464375117522-1311dd7d0cd5?q=80&w=1200&auto=format&fit=crop" alt="Live 2" />
+        <img src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=1200&auto=format&fit=crop" alt="Vinili" />
+      </div>
+    </section>
+
+    <!-- ===== CONTACTS ===== -->
+    <section id="contatti" aria-labelledby="contactTitle">
+      <div class="section-head"><h2 id="contactTitle">Contatti</h2><div class="muted">Booking, management & press</div></div>
+      <div class="grid">
+        <div class="card">
+          <h3 style="margin:6px 0 8px">Booking</h3>
+          <p class="muted">booking@nomeartista.com</p>
+          <a class="btn" href="mailto:booking@nomeartista.com">Scrivi</a>
+        </div>
+        <div class="card">
+          <h3 style="margin:6px 0 8px">Press</h3>
+          <p class="muted">press@nomeartista.com</p>
+          <a class="btn" href="mailto:press@nomeartista.com">Scrivi</a>
+        </div>
+        <div class="card">
+          <h3 style="margin:6px 0 8px">Social</h3>
+          <div style="display:flex; gap:10px; flex-wrap:wrap">
+            <a class="btn" target="_blank" rel="noopener" href="https://instagram.com">Instagram</a>
+            <a class="btn" target="_blank" rel="noopener" href="https://tiktok.com">TikTok</a>
+            <a class="btn" target="_blank" rel="noopener" href="https://open.spotify.com">Spotify</a>
+            <a class="btn" target="_blank" rel="noopener" href="https://youtube.com">YouTube</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="container">
+    <div>© <span id="year"></span> Nome Artista — All rights reserved.</div>
+  </footer>
+
+  <script>
+    // Aggiorna anno footer
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Tabs Spotify/YouTube
+    const tabs = document.querySelectorAll('.tab');
+    tabs.forEach(tab => tab.addEventListener('click', () => {
+      tabs.forEach(t => t.setAttribute('aria-selected','false'));
+      tab.setAttribute('aria-selected','true');
+      document.querySelectorAll('[role="tabpanel"]').forEach(p => p.hidden = true);
+      document.querySelector(tab.dataset.target).hidden = false;
+    }));
+
+    // Mini galleria YouTube
+    const ytPlayer = document.getElementById('ytPlayer');
+    document.querySelectorAll('.video-item').forEach(item => {
+      item.addEventListener('click', () => {
+        const id = item.getAttribute('data-yt');
+        ytPlayer.src = `https://www.youtube.com/embed/${id}`;
+      })
+    });
+  </script>
+
+  <!--
+    ▶︎ ISTRUZIONI RAPIDE
+    1) Sostituisci "Nome Artista" nel titolo, logo e footer.
+    2) Cambia i link Spotify: vai su una traccia/album/playlist > Condividi > Incorpora (o copia link) e usa l'URL nel src dell'iframe.
+    3) Cambia i video YouTube: prendi l'ID (es. https://youtu.be/ID) e aggiornalo in data-yt e nelle thumbnail.
+    4) Aggiorna date, gallery e contatti. Puoi caricare le tue foto nella repo e usare percorsi relativi.
+    5) Pubblicazione su GitHub Pages:
+       • Opzione A: crea una repo "username.github.io" e carica questo file come index.html (ramo main). Il sito sarà su https://username.github.io
+       • Opzione B: in una repo qualsiasi, vai su Settings > Pages > Branch: main / root > Save. L'index.html deve stare nella root o in /docs.
+    6) Dominio personalizzato (opzionale): in Settings > Pages aggiungi il dominio e crea un record CNAME sul tuo DNS.
+
+    Accessibilità: le sezioni hanno landmark, i bottoni hanno ruoli e aria-* corretti. Le iframes usano title/allow.
+    Performance: immagini esterne con CDN; puoi ottimizzarle ospitandole localmente e aggiungendo width/height.
+  -->
+</body>
+</html>
