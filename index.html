@@ -3,11 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>★ SIMONE TUCCIO ★ – L'Indie Pop Siciliano</title>
+  <title>★ SIMONE TUCCIO ★ – Hai visto la TV?</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>★</text></svg>"/>
-  <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Bebas+Neue&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet"/>
+
   <style>
     :root {
       --bg: #111118;
@@ -21,9 +19,9 @@
       --green: #00ff41;
       --text: #e0e0e8;
       --text-dim: #888899;
-      --font-mono: 'Space Mono', monospace;
-      --font-display: 'Bebas Neue', cursive;
-      --font-ui: 'Share Tech Mono', monospace;
+      --font-mono: Arial, Helvetica, sans-serif;
+      --font-display: Arial, Helvetica, sans-serif;
+      --font-ui: Arial, Helvetica, sans-serif;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -239,7 +237,7 @@
     .mood-img {
       border: 1px solid var(--border);
       overflow: hidden;
-      height: 180px;
+      height: 100px;
     }
     .mood-img img { width: 100%; height: 100%; object-fit: cover; filter: saturate(0.6); }
 
@@ -559,16 +557,12 @@
   <div class="ticker-label">NEWS</div>
   <div style="overflow:hidden;flex:1;">
     <div class="ticker-track">
-      <span>★ NUOVO SINGOLO "OCCHI" FUORI ORA ▲</span>
+      <span>★ NUOVO SINGOLO "AMEN" FUORI ORA ▲</span>
       <span>300.000+ STREAM SU SPOTIFY ▲</span>
-      <span>EP "UN EP INDIE" DISPONIBILE SU TUTTE LE PIATTAFORME ▲</span>
-      <span>SICILIANO A MILANO ∙ INDIE POP ∙ ANIMA PURA ▲</span>
       <span>SEGUIMI SU INSTAGRAM @SIMONETUCCIO ▲</span>
       <!-- duplicate for seamless loop -->
-      <span>★ NUOVO SINGOLO "OCCHI" FUORI ORA ▲</span>
+      <span>★ NUOVO SINGOLO "AMEN" FUORI ORA ▲</span>
       <span>300.000+ STREAM SU SPOTIFY ▲</span>
-      <span>EP "UN EP INDIE" DISPONIBILE SU TUTTE LE PIATTAFORME ▲</span>
-      <span>SICILIANO A MILANO ∙ INDIE POP ∙ ANIMA PURA ▲</span>
       <span>SEGUIMI SU INSTAGRAM @SIMONETUCCIO ▲</span>
     </div>
   </div>
@@ -614,7 +608,7 @@
         <div class="profile-name">
           SIMONE TUCCIO <span class="xxx">×××</span>
         </div>
-        <p class="profile-bio">"Occhi" è fuori ovunque. 🌙 Siciliano a Milano.</p>
+        <p class="profile-bio">"Amen" è fuori ovunque. 🌙 Hai visto la TV?.</p>
 
         <div class="section-label">CURRENT MOOD ▲</div>
         <div class="mood-img">
@@ -662,20 +656,24 @@
     <!-- BIOGRAPHY -->
     <div class="window">
       <div class="window-title">
-        <div class="wt-label">▲ BIOGRAFIA // STATUS ▲</div>
+        <div class="wt-label">▲ STATUS ▲</div>
         <div class="window-btns"><span>─</span><span>=</span><span>×</span></div>
       </div>
       <div class="window-body">
-        <div class="bio-genre">L'INDIE POP SICILIANO</div>
+        <div class="bio-genre">Hai visto la TV?</div>
         <div class="bio-divider"></div>
         <p class="bio-text">
-          Simone Tuccio – artista indie nato in Sicilia, cresciuto tra melodie malinconiche e
-          testi che raccontano emozioni vere. Nel 2024 lancia l'EP <em>"Un EP Indie"</em> con
-          cui supera i <strong>300k+ ascolti</strong>. Il suo suono mescola indie pop raffinato,
-          synth analogici e una voce che ti entra dentro.<br/><br/>
-          Brani come <strong>Alaska</strong>, <strong>speciale</strong> ed
-          <strong>Effetto collaterale</strong> hanno conquistato migliaia di ascoltatori.
-          Oggi vive a Milano e continua a scrivere storie in musica.
+          È arrivato il momento di cambiare canale.<br/><br/>
+          Basta un semplice click e sarai trascinato in un mondo nuovo, lucido e sgargiante.
+          Spegni le emozioni e goditi il viaggio.<br/><br/>
+          I primi tre atti già disponibili.<br/><br/>
+          Atto I – <strong>"Inesorabilmente"</strong>.<br/>
+          Atto II – <strong>"Occhi"</strong>.<br/>
+          Atto III – <strong>"Amen"</strong>.<br/><br/>
+          Ma fai attenzione.<br/>
+          Il viaggio non si chiude qui.<br/>
+          Il prossimo atto sta arrivando.<br/><br/>
+          <strong>Rimani sintonizzato. Non vorrai perderlo.</strong>
         </p>
       </div>
     </div>
@@ -731,7 +729,7 @@
   <div class="footer-name">
     <span class="star">★</span> &nbsp; SIMONE TUCCIO &nbsp; <span class="star">★</span>
   </div>
-  <div class="footer-copy">© 2026 × SIMONE TUCCIO – INDIE SOUL ×</div>
+  <div class="footer-copy">© 2026 × SIMONE TUCCIO ×</div>
 </footer>
 
 <!-- ══════════════════════════════════════
@@ -778,79 +776,109 @@
 </div>
 
 <!-- ══════════════════════════════════════
-     JAVASCRIPT
+     FIREBASE SDK
 ══════════════════════════════════════ -->
-<script>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import {
+    getFirestore, collection, addDoc, getDocs, deleteDoc, doc,
+    query, orderBy, onSnapshot, serverTimestamp
+  } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
   // ── CONFIGURAZIONE ──────────────────────────────
-  // ⚠️ CAMBIA QUESTA PASSWORD PRIMA DI PUBBLICARE!
-  const ADMIN_PASSWORD = 'simonetuccio2026';
+  const ADMIN_PASSWORD = 'simonetuccio2026'; // ⚠️ cambia prima di pubblicare
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDuV9VSWT39go8SSY9Jxc15lufau4ryBfQ",
+    authDomain: "studio-5537008312-f3f9c.firebaseapp.com",
+    projectId: "studio-5537008312-f3f9c",
+    storageBucket: "studio-5537008312-f3f9c.firebasestorage.app",
+    messagingSenderId: "284822017321",
+    appId: "1:284822017321:web:04782b8d1a10894dfc5338"
+  };
   // ────────────────────────────────────────────────
+
+  const app = initializeApp(firebaseConfig);
+  const db  = getFirestore(app);
+  const postsCol = collection(db, 'simonetuccio_posts');
 
   let isAdmin = false;
 
-  // ── VISIT COUNTER ──
+  // ── VISIT COUNTER (localStorage — conta per browser) ──
   function initCounter() {
     let count = parseInt(localStorage.getItem('st_visits') || '0');
     count++;
     localStorage.setItem('st_visits', count);
-    const display = String(count).padStart(7, '0');
-    document.getElementById('visitCounter').textContent = display;
+    document.getElementById('visitCounter').textContent = String(count).padStart(7, '0');
   }
   initCounter();
 
-  // ── BLOG: LOAD POSTS ──
-  function getPosts() {
-    try { return JSON.parse(localStorage.getItem('st_posts') || '[]'); }
-    catch { return []; }
+  // ── UTILS ──
+  function escHtml(str) {
+    return String(str)
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+      .replace(/"/g,'&quot;').replace(/'/g,'&#039;');
   }
-  function savePosts(posts) {
-    localStorage.setItem('st_posts', JSON.stringify(posts));
+  function formatDate(ts) {
+    if (!ts) return '…';
+    const d = ts.toDate ? ts.toDate() : new Date(ts);
+    return d.toLocaleDateString('it-IT', { day:'2-digit', month:'long', year:'numeric' })
+           + ' ▸ ' + d.toLocaleTimeString('it-IT', { hour:'2-digit', minute:'2-digit' });
   }
 
-  function renderPosts() {
-    const posts = getPosts();
+  // ── RENDER POSTS ──
+  function renderPosts(docs) {
     const container = document.getElementById('postsContainer');
-    const empty = document.getElementById('emptyPostsMsg');
+    const empty     = document.getElementById('emptyPostsMsg');
     container.innerHTML = '';
 
-    if (posts.length === 0) {
+    if (docs.length === 0) {
       empty.style.display = 'block';
-    } else {
-      empty.style.display = 'none';
-      posts.slice().reverse().forEach((p, revIdx) => {
-        const realIdx = posts.length - 1 - revIdx;
-        const card = document.createElement('div');
-        card.className = 'post-card';
-        card.innerHTML = `
-          <div class="post-header">
-            <div class="post-date">${p.date}</div>
-            <button class="post-delete" data-idx="${realIdx}" title="Elimina post">× ELIMINA</button>
-          </div>
-          <div class="post-title">${escHtml(p.title)}</div>
-          <div class="post-content">${escHtml(p.content).replace(/\n/g,'<br/>')}</div>
-        `;
-        container.appendChild(card);
-      });
-
-      // delete buttons
-      container.querySelectorAll('.post-delete').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const idx = parseInt(btn.dataset.idx);
-          const posts2 = getPosts();
-          posts2.splice(idx, 1);
-          savePosts(posts2);
-          renderPosts();
-        });
-      });
+      return;
     }
+    empty.style.display = 'none';
+
+    docs.forEach(docSnap => {
+      const p   = docSnap.data();
+      const id  = docSnap.id;
+      const card = document.createElement('div');
+      card.className = 'post-card';
+      card.innerHTML = `
+        <div class="post-header">
+          <div class="post-date">${formatDate(p.createdAt)}</div>
+          <button class="post-delete" data-id="${id}" title="Elimina post">× ELIMINA</button>
+        </div>
+        <div class="post-title">${escHtml(p.title)}</div>
+        <div class="post-content">${escHtml(p.content).replace(/\n/g,'<br/>')}</div>
+      `;
+      container.appendChild(card);
+    });
+
+    container.querySelectorAll('.post-delete').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        if (!isAdmin) return;
+        const id = btn.dataset.id;
+        try {
+          await deleteDoc(doc(db, 'simonetuccio_posts', id));
+        } catch(e) {
+          console.error('Errore eliminazione:', e);
+        }
+      });
+    });
   }
 
-  function escHtml(str) {
-    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
-              .replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+  // ── REALTIME LISTENER ──
+  function startListener() {
+    const q = query(postsCol, orderBy('createdAt', 'desc'));
+    onSnapshot(q, snapshot => {
+      renderPosts(snapshot.docs);
+    }, err => {
+      console.error('Firestore error:', err);
+      document.getElementById('emptyPostsMsg').textContent = 'ERRORE CARICAMENTO POSTS ×';
+      document.getElementById('emptyPostsMsg').style.display = 'block';
+    });
   }
-
-  renderPosts();
+  startListener();
 
   // ── ADMIN STATE ──
   function setAdminMode(active) {
@@ -863,11 +891,11 @@
   }
 
   // ── ADMIN MODAL ──
-  const adminModal = document.getElementById('adminModal');
+  const adminModal    = document.getElementById('adminModal');
   const adminPassInput = document.getElementById('adminPassInput');
-  const adminError = document.getElementById('adminError');
+  const adminError    = document.getElementById('adminError');
 
-  document.getElementById('adminNavBtn').addEventListener('click', (e) => {
+  document.getElementById('adminNavBtn').addEventListener('click', e => {
     e.preventDefault();
     if (isAdmin) { setAdminMode(false); return; }
     adminPassInput.value = '';
@@ -879,6 +907,7 @@
   function closeAdmin() { adminModal.classList.remove('open'); }
   document.getElementById('closeAdminModal').addEventListener('click', closeAdmin);
   document.getElementById('closeAdminModal2').addEventListener('click', closeAdmin);
+  adminModal.addEventListener('click', e => { if (e.target === adminModal) closeAdmin(); });
 
   document.getElementById('adminLoginBtn').addEventListener('click', () => {
     if (adminPassInput.value === ADMIN_PASSWORD) {
@@ -894,9 +923,6 @@
   adminPassInput.addEventListener('keydown', e => {
     if (e.key === 'Enter') document.getElementById('adminLoginBtn').click();
   });
-
-  // click fuori per chiudere
-  adminModal.addEventListener('click', e => { if (e.target === adminModal) closeAdmin(); });
 
   // ── POST MODAL ──
   const postModal = document.getElementById('postModal');
@@ -918,27 +944,31 @@
   document.getElementById('closePostModal2').addEventListener('click', closePostModal);
   postModal.addEventListener('click', e => { if (e.target === postModal) closePostModal(); });
 
-  document.getElementById('savePostBtn').addEventListener('click', () => {
-    const title = document.getElementById('postTitleInput').value.trim();
+  document.getElementById('savePostBtn').addEventListener('click', async () => {
+    const title   = document.getElementById('postTitleInput').value.trim();
     const content = document.getElementById('postContentInput').value.trim();
     if (!title || !content) return;
 
-    const now = new Date();
-    const date = now.toLocaleDateString('it-IT', { day:'2-digit', month:'long', year:'numeric' })
-                 + ' ▸ ' + now.toLocaleTimeString('it-IT', { hour:'2-digit', minute:'2-digit' });
+    const btn = document.getElementById('savePostBtn');
+    btn.textContent = 'SALVO...';
+    btn.disabled = true;
 
-    const posts = getPosts();
-    posts.push({ title, content, date });
-    savePosts(posts);
-    renderPosts();
-    closePostModal();
+    try {
+      await addDoc(postsCol, { title, content, createdAt: serverTimestamp() });
+      closePostModal();
+    } catch(e) {
+      console.error('Errore salvataggio:', e);
+      alert('Errore nel salvataggio. Controlla le Firestore Rules.');
+    } finally {
+      btn.textContent = 'PUBBLICA ▲';
+      btn.disabled = false;
+    }
   });
 
-  // ── WINDOW CHROME (fun, non funzionale come MySpace) ──
+  // ── WINDOW CHROME ──
   document.querySelectorAll('.window-btns').forEach(group => {
     group.querySelectorAll('span').forEach(btn => {
       btn.addEventListener('click', () => {
-        // piccolo flash
         const win = btn.closest('.window') || btn.closest('.blog-title-bar')?.parentElement;
         if (win) {
           win.style.opacity = '0.3';
