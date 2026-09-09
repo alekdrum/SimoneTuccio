@@ -3,7 +3,29 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>★ SIMONE TUCCIO ★ – Hai visto la TV?</title>
+  <title>Simone Tuccio – Hai visto la TV? | Sito ufficiale</title>
+  <meta name="description" content="Sito ufficiale di Simone Tuccio. «Hai visto la TV?» — i primi tre atti sono fuori: Inesorabilmente, Occhi, Amen. Ascolta su Spotify, seguimi su Instagram."/>
+  <meta name="author" content="Simone Tuccio"/>
+  <meta name="theme-color" content="#7c3aed"/>
+  <link rel="canonical" href="https://www.simonetuccio.it/"/>
+
+  <!-- Anteprima dei link condivisi su WhatsApp, Instagram, Telegram, Facebook -->
+  <meta property="og:type" content="profile"/>
+  <meta property="og:site_name" content="Simone Tuccio"/>
+  <meta property="og:locale" content="it_IT"/>
+  <meta property="og:url" content="https://www.simonetuccio.it/"/>
+  <meta property="og:title" content="Simone Tuccio – Hai visto la TV?"/>
+  <meta property="og:description" content="I primi tre atti sono fuori: Inesorabilmente, Occhi, Amen. Il prossimo atto sta arrivando."/>
+  <meta property="og:image" content="https://www.simonetuccio.it/assets/profile.jpg"/>
+  <meta property="og:image:alt" content="Simone Tuccio"/>
+
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="Simone Tuccio – Hai visto la TV?"/>
+  <meta name="twitter:description" content="I primi tre atti sono fuori: Inesorabilmente, Occhi, Amen. Il prossimo atto sta arrivando."/>
+  <meta name="twitter:image" content="https://www.simonetuccio.it/assets/profile.jpg"/>
+
+  <link rel="preconnect" href="https://www.gstatic.com"/>
+  <link rel="preconnect" href="https://open.spotify.com"/>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>★</text></svg>"/>
 
   <style>
@@ -19,18 +41,29 @@
       --green: #00ff41;
       --text: #e0e0e8;
       --text-dim: #888899;
-      --font-mono: Arial, Helvetica, sans-serif;
-      --font-display: Arial, Helvetica, sans-serif;
-      --font-ui: Arial, Helvetica, sans-serif;
+      /* Stack di sistema: zero richieste di rete, nessun "salto" di font al caricamento */
+      --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+      --font-display: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      --font-ui: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
 
+    /* Il monospace resta dove ha senso: barre, etichette, contatore, date */
+    .ticker-label, .ticker-track span, .nav-links a, .window-title, .blog-title-bar,
+    .section-label, .visit-counter, .counter-display, .post-date, .admin-badge,
+    .footer-copy, .empty-posts, .modal-title, .modal-body label, .new-post-btn,
+    .blog-add-btn, .window-btns button { font-family: var(--font-mono); }
+
+    .nav-logo, .profile-name, .bio-genre, .footer-name { font-family: var(--font-display); }
+
+    :focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+
     body {
       background: var(--bg);
       color: var(--text);
-      font-family: var(--font-mono);
+      font-family: var(--font-ui);
       font-size: 13px;
       min-height: 100vh;
       cursor: default;
@@ -126,6 +159,7 @@
     }
     .nav-links a::after { content: '×'; color: var(--text-dim); font-size: 10px; }
     .nav-links a:hover { color: var(--cyan); border-color: var(--cyan); background: rgba(0,229,204,0.05); }
+    .nav-links a[hidden] { display: none; }
 
     /* LAYOUT */
     .page-wrap {
@@ -152,13 +186,15 @@
     }
     .window-title .wt-label { display: flex; align-items: center; gap: 6px; }
     .window-btns { display: flex; gap: 3px; }
-    .window-btns span {
-      width: 14px; height: 14px;
-      border: 1px solid rgba(255,255,255,0.4);
+    .window-btns button {
+      width: 16px; height: 16px; padding: 0;
+      background: none; border: 1px solid rgba(255,255,255,0.4);
       display: flex; align-items: center; justify-content: center;
-      font-size: 8px; cursor: pointer; color: rgba(255,255,255,0.7);
+      font-size: 9px; line-height: 1; cursor: pointer; color: rgba(255,255,255,0.85);
     }
-    .window-btns span:hover { background: rgba(255,255,255,0.15); }
+    .window-btns button:hover { background: rgba(255,255,255,0.2); }
+    .window-title, .blog-title-bar { cursor: pointer; }
+    .window.collapsed .window-body { display: none; }
     .window-body { padding: 14px; }
 
     /* SIDEBAR */
@@ -216,8 +252,9 @@
     .visit-counter { font-size: 10px; color: var(--text-dim); letter-spacing: 1px; margin-bottom: 6px; }
     .counter-display {
       background: #000; border: 1px solid var(--green);
-      color: var(--green); font-family: 'Courier New', monospace;
+      color: var(--green); font-family: var(--font-mono);
       font-size: 20px; padding: 6px 14px; letter-spacing: 4px;
+      font-variant-numeric: tabular-nums;
       display: inline-block; box-shadow: 0 0 10px rgba(0,255,65,0.3);
     }
 
@@ -343,6 +380,21 @@
       .footer-name { font-size: 20px; }
       .blog-title-bar { font-size: 10px; }
       .new-post-btn { font-size: 11px; padding: 14px; }
+      /* area di tocco decente sui bottoni finestra */
+      .window-btns button { width: 22px; height: 22px; font-size: 11px; }
+      .window-btns { gap: 5px; }
+    }
+
+    /* Rispetta chi ha chiesto meno animazioni a livello di sistema */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+      html { scroll-behavior: auto; }
+      .ticker-track { animation: none; }
+      body::before { display: none; }
     }
   </style>
 </head>
@@ -364,14 +416,15 @@
 </div>
 
 <!-- NAV -->
-<nav>
+<nav aria-label="Navigazione principale">
   <div class="nav-logo">
     <span class="star">★</span> SIMONE TUCCIO <span class="star">★</span>
   </div>
   <div class="nav-links">
     <a href="#musica">MUSICA</a>
     <a href="#blog">BLOG</a>
-    <a href="#" id="adminNavBtn" style="color:var(--cyan);border-color:var(--cyan);">⚙ ADMIN</a>
+    <!-- Accesso admin: nascosto ai visitatori, si rivela aprendo https://www.simonetuccio.it/#admin -->
+    <a href="#admin" id="adminNavBtn" hidden style="color:var(--cyan);border-color:var(--cyan);">⚙ ADMIN</a>
   </div>
 </nav>
 
@@ -384,20 +437,22 @@
     <div class="window">
       <div class="window-title">
         <div class="wt-label">★ PROFILO UTENTE ★</div>
-        <div class="window-btns"><span>─</span><span>=</span><span>×</span></div>
+        <div class="window-btns"><button type="button" data-win="min" title="Riduci" aria-label="Riduci finestra">─</button><button type="button" data-win="max" title="Espandi" aria-label="Espandi finestra">=</button><button type="button" data-win="close" title="Chiudi" aria-label="Chiudi finestra">×</button></div>
       </div>
       <div class="window-body">
         <div class="profile-img-wrap">
-          <img src="assets/profile.jpg" alt="Simone Tuccio"
-               onerror="this.src='https://via.placeholder.com/280x280/1a1a24/7c3aed?text=ST'"/>
+          <img src="assets/profile.jpg" alt="Ritratto di Simone Tuccio"
+               width="1066" height="1599" decoding="async" fetchpriority="high"
+               onerror="this.onerror=null;this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyODAgMjgwIj48cmVjdCB3aWR0aD0iMjgwIiBoZWlnaHQ9IjI4MCIgZmlsbD0iIzFhMWEyNCIvPjx0ZXh0IHg9IjE0MCIgeT0iMTU1IiBmb250LWZhbWlseT0ibW9ub3NwYWNlIiBmb250LXNpemU9IjU2IiBmaWxsPSIjN2MzYWVkIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5TVDwvdGV4dD48L3N2Zz4='"/>
           <div class="admin-badge" id="adminBadge" style="display:none">ADMIN MODE</div>
         </div>
         <div class="profile-name">SIMONE TUCCIO <span class="xxx">×××</span></div>
-        <p class="profile-bio">"Amen" è fuori ovunque. Hai visto la TV?.</p>
+        <p class="profile-bio">«Amen» è fuori ovunque. Hai visto la TV?</p>
         <div class="section-label">CURRENT MOOD ▲</div>
         <div class="mood-img">
-          <img src="assets/mood.jpg" alt="Current Mood"
-               onerror="this.src='https://via.placeholder.com/280x180/111118/2a2a3a?text=∿∿∿'"/>
+          <img src="assets/mood.jpg" alt="Current mood: fotogramma dal progetto Hai visto la TV?"
+               width="1600" height="1280" loading="lazy" decoding="async"
+               onerror="this.onerror=null;this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyODAgMTgwIj48cmVjdCB3aWR0aD0iMjgwIiBoZWlnaHQ9IjE4MCIgZmlsbD0iIzExMTExOCIvPjx0ZXh0IHg9IjE0MCIgeT0iMTAyIiBmb250LWZhbWlseT0ibW9ub3NwYWNlIiBmb250LXNpemU9IjMwIiBmaWxsPSIjMzMzMzRhIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj4vLy8vLzwvdGV4dD48L3N2Zz4='"/>
         </div>
       </div>
     </div>
@@ -406,26 +461,27 @@
     <div class="window">
       <div class="window-title">
         <div class="wt-label">▲ CONNETTITI ▲</div>
-        <div class="window-btns"><span>×</span></div>
+        <div class="window-btns"><button type="button" data-win="close" title="Chiudi" aria-label="Chiudi finestra">×</button></div>
       </div>
       <div class="window-body">
-        <a href="https://www.instagram.com/simonetuccio/" target="_blank" class="social-link">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <a href="https://www.instagram.com/simonetuccio/" target="_blank" rel="me noopener noreferrer" class="social-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" focusable="false">
             <rect x="2" y="2" width="20" height="20" rx="5"/>
             <circle cx="12" cy="12" r="5"/>
             <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>
           </svg>
           INSTAGRAM
         </a>
-        <a href="https://open.spotify.com/intl-it/artist/7dqy9RM6fw0vzbMf4FZUzC" target="_blank" class="social-link">
-          <svg viewBox="0 0 24 24" fill="currentColor">
+        <a href="https://open.spotify.com/intl-it/artist/7dqy9RM6fw0vzbMf4FZUzC" target="_blank" rel="me noopener noreferrer" class="social-link">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
             <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
           </svg>
           SPOTIFY
         </a>
         <div class="visit-counter" style="margin-top:14px;">
-          <div style="margin-bottom:4px;">VISITE:</div>
-          <div class="counter-display" id="visitCounter">0000000</div>
+          <div style="margin-bottom:4px;" id="visitCounterLabel">VISITE:</div>
+          <div class="counter-display" id="visitCounter" role="status"
+               aria-live="polite" aria-labelledby="visitCounterLabel">0000000</div>
         </div>
       </div>
     </div>
@@ -438,7 +494,7 @@
     <div class="window">
       <div class="window-title">
         <div class="wt-label">▲ STATUS ▲</div>
-        <div class="window-btns"><span>─</span><span>=</span><span>×</span></div>
+        <div class="window-btns"><button type="button" data-win="min" title="Riduci" aria-label="Riduci finestra">─</button><button type="button" data-win="max" title="Espandi" aria-label="Espandi finestra">=</button><button type="button" data-win="close" title="Chiudi" aria-label="Chiudi finestra">×</button></div>
       </div>
       <div class="window-body">
         <div class="bio-genre">Hai visto la TV?</div>
@@ -463,12 +519,13 @@
     <div class="window" id="musica">
       <div class="window-title">
         <div class="wt-label">★ PLAYER SPOTIFY ★</div>
-        <div class="window-btns"><span>─</span><span>=</span><span>×</span></div>
+        <div class="window-btns"><button type="button" data-win="min" title="Riduci" aria-label="Riduci finestra">─</button><button type="button" data-win="max" title="Espandi" aria-label="Espandi finestra">=</button><button type="button" data-win="close" title="Chiudi" aria-label="Chiudi finestra">×</button></div>
       </div>
       <div class="window-body" style="padding:0;">
         <div class="spotify-embed">
           <iframe
-            src="https://open.spotify.com/embed/artist/7dqy9RM6fw0vzbMf4FZUzC?utm_source=generator&theme=0"
+            title="Player Spotify — discografia di Simone Tuccio"
+            src="https://open.spotify.com/embed/artist/7dqy9RM6fw0vzbMf4FZUzC?utm_source=generator&amp;theme=0"
             width="100%" height="352" frameborder="0" allowfullscreen
             allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
             loading="lazy">
@@ -483,7 +540,7 @@
         <div>★ DIARIO // BLOG ★</div>
         <div style="display:flex;gap:6px;align-items:center;">
           <button class="blog-add-btn" id="newPostBtn">+ NUOVO POST</button>
-          <div class="window-btns"><span>─</span><span>=</span><span>×</span></div>
+          <div class="window-btns"><button type="button" data-win="min" title="Riduci" aria-label="Riduci finestra">─</button><button type="button" data-win="max" title="Espandi" aria-label="Espandi finestra">=</button><button type="button" data-win="close" title="Chiudi" aria-label="Chiudi finestra">×</button></div>
         </div>
       </div>
       <div class="window-body">
@@ -500,7 +557,7 @@
 
 <footer>
   <div class="footer-name"><span class="star">★</span> &nbsp; SIMONE TUCCIO &nbsp; <span class="star">★</span></div>
-  <div class="footer-copy">© 2026 × SIMONE TUCCIO ×</div>
+  <div class="footer-copy">© <span id="year">2026</span> × SIMONE TUCCIO ×</div>
 </footer>
 
 <!-- MODAL ADMIN -->
@@ -542,15 +599,152 @@
   </div>
 </div>
 
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "MusicGroup",
+  "name": "Simone Tuccio",
+  "url": "https://www.simonetuccio.it/",
+  "image": "https://www.simonetuccio.it/assets/profile.jpg",
+  "description": "Progetto musicale \"Hai visto la TV?\": Inesorabilmente, Occhi, Amen.",
+  "sameAs": [
+    "https://www.instagram.com/simonetuccio/",
+    "https://open.spotify.com/intl-it/artist/7dqy9RM6fw0vzbMf4FZUzC"
+  ]
+}
+</script>
+
 <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import {
-    getFirestore, collection, addDoc, deleteDoc, doc,
-    query, orderBy, onSnapshot, serverTimestamp
-  } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  /* =========================================================================
+     1) INTERFACCIA — gira SEMPRE, anche se Firebase non si carica.
+        Prima il codice non aveva questa separazione: bastava un ad-blocker
+        o una rete che bloccava gstatic.com per far morire l'intero script,
+        contatore compreso (restava fermo su 0000000).
+     ========================================================================= */
+  const $ = id => document.getElementById(id);
 
-  const ADMIN_PASSWORD = 'simonetuccio2026';
+  // Anno del footer sempre corretto, senza doverlo aggiornare a mano
+  $('year').textContent = new Date().getFullYear();
 
+  // Accesso allo storage a prova di eccezione:
+  // Safari in navigazione privata e i browser con i cookie bloccati
+  // fanno lanciare localStorage/sessionStorage, non ritornano null.
+  const store = {
+    get(key, area) { try { return (area || localStorage).getItem(key); } catch (e) { return null; } },
+    set(key, val, area) { try { (area || localStorage).setItem(key, val); return true; } catch (e) { return false; } }
+  };
+
+  /* --- Finestre in stile desktop: ora i bottoni fanno davvero qualcosa --- */
+  document.querySelectorAll('.window').forEach(win => {
+    const bar = win.querySelector('.window-title, .blog-title-bar');
+    win.querySelectorAll('.window-btns button').forEach(btn => {
+      btn.addEventListener('click', ev => {
+        ev.stopPropagation();
+        win.classList.toggle('collapsed', btn.dataset.win !== 'max');
+      });
+    });
+    // La barra del titolo riapre la finestra: niente resta chiuso per sempre
+    if (bar) bar.addEventListener('click', () => win.classList.remove('collapsed'));
+  });
+  $('newPostBtn').addEventListener('click', ev => ev.stopPropagation());
+
+  /* --- Accesso admin ---
+     ATTENZIONE: nessun controllo fatto nel browser è una misura di sicurezza.
+     Qui c'è l'hash della password al posto della password in chiaro, così non
+     si legge più con "visualizza sorgente", ma chiunque può aggirarlo dagli
+     strumenti sviluppatore. L'unica protezione reale sono le Firestore Rules.
+     Per cambiare password, in console:
+       crypto.subtle.digest('SHA-256', new TextEncoder().encode('NUOVA'))
+         .then(b => console.log([...new Uint8Array(b)].map(x => x.toString(16).padStart(2,'0')).join('')))
+  */
+  const ADMIN_HASH = '8e7d9afce4cdd664cc7a295e19f56b1abada950b88d7ecbf4fb573961645e68d';
+
+  async function sha256Hex(text) {
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
+    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+  }
+
+  let isAdmin = false;
+  const adminModal = $('adminModal');
+  const adminPassInput = $('adminPassInput');
+  const adminError = $('adminError');
+  const adminNavBtn = $('adminNavBtn');
+
+  function setAdminMode(active) {
+    isAdmin = active;
+    document.body.classList.toggle('admin-mode', active);
+    $('adminBadge').style.display = active ? 'block' : 'none';
+    $('blogNewPostArea').style.display = active ? 'block' : 'none';
+    adminNavBtn.hidden = false;
+    adminNavBtn.textContent = active ? '⚙ ESCI ADMIN' : '⚙ ADMIN';
+    adminNavBtn.style.color = active ? '#ff9900' : 'var(--cyan)';
+  }
+
+  function openAdminModal() {
+    adminPassInput.value = '';
+    adminError.classList.remove('show');
+    adminModal.classList.add('open');
+    setTimeout(() => adminPassInput.focus(), 100);
+  }
+  const closeAdmin = () => adminModal.classList.remove('open');
+
+  // Il pulsante ADMIN non è più in bella vista: compare solo su /#admin
+  function checkAdminHash() {
+    if (location.hash === '#admin') { adminNavBtn.hidden = false; if (!isAdmin) openAdminModal(); }
+  }
+  checkAdminHash();
+  window.addEventListener('hashchange', checkAdminHash);
+
+  adminNavBtn.addEventListener('click', ev => {
+    ev.preventDefault();
+    if (isAdmin) { setAdminMode(false); return; }
+    openAdminModal();
+  });
+  $('closeAdminModal').addEventListener('click', closeAdmin);
+  $('closeAdminModal2').addEventListener('click', closeAdmin);
+  adminModal.addEventListener('click', ev => { if (ev.target === adminModal) closeAdmin(); });
+
+  $('adminLoginBtn').addEventListener('click', async () => {
+    if (!(window.crypto && crypto.subtle)) {
+      adminError.textContent = 'RICHIEDE HTTPS ×';
+      adminError.classList.add('show');
+      return;
+    }
+    const ok = (await sha256Hex(adminPassInput.value)) === ADMIN_HASH;
+    if (ok) { adminError.classList.remove('show'); closeAdmin(); setAdminMode(true); }
+    else {
+      adminError.textContent = 'PASSWORD ERRATA ×';
+      adminError.classList.add('show');
+      adminPassInput.value = '';
+      adminPassInput.focus();
+    }
+  });
+  adminPassInput.addEventListener('keydown', ev => { if (ev.key === 'Enter') $('adminLoginBtn').click(); });
+
+  // Esc chiude qualsiasi modale aperta
+  document.addEventListener('keydown', ev => {
+    if (ev.key === 'Escape') document.querySelectorAll('.modal-overlay.open').forEach(m => m.classList.remove('open'));
+  });
+
+  const postModal = $('postModal');
+  const openPostModal = () => {
+    $('postTitleInput').value = '';
+    $('postContentInput').value = '';
+    postModal.classList.add('open');
+    setTimeout(() => $('postTitleInput').focus(), 100);
+  };
+  const closePostModal = () => postModal.classList.remove('open');
+
+  $('newPostBtn').addEventListener('click', () => { isAdmin ? openPostModal() : openAdminModal(); });
+  $('newPostTrigger').addEventListener('click', openPostModal);
+  $('closePostModal').addEventListener('click', closePostModal);
+  $('closePostModal2').addEventListener('click', closePostModal);
+  postModal.addEventListener('click', ev => { if (ev.target === postModal) closePostModal(); });
+
+  /* =========================================================================
+     2) FIREBASE — import dinamico e tollerante ai guasti.
+        Se la CDN è bloccata, il sito resta comunque navigabile.
+     ========================================================================= */
   const firebaseConfig = {
     apiKey: "AIzaSyDuV9VSWT39go8SSY9Jxc15lufau4ryBfQ",
     authDomain: "studio-5537008312-f3f9c.firebaseapp.com",
@@ -560,144 +754,144 @@
     appId: "1:284822017321:web:04782b8d1a10894dfc5338"
   };
 
-  const app = initializeApp(firebaseConfig);
-  const db  = getFirestore(app);
-  const postsCol = collection(db, 'simonetuccio_posts');
-  let isAdmin = false;
+  let db = null, fb = null;
+  try {
+    const [appMod, fsMod] = await Promise.all([
+      import("https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"),
+      import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js")
+    ]);
+    fb = fsMod;
+    db = fsMod.getFirestore(appMod.initializeApp(firebaseConfig));
+  } catch (err) {
+    console.warn('[ST] Firebase non raggiungibile — contatore e diario in modalità ridotta.', err);
+  }
 
-  // VISIT COUNTER
-  (() => {
-    let count = parseInt(localStorage.getItem('st_visits') || '0') + 1;
-    localStorage.setItem('st_visits', count);
-    document.getElementById('visitCounter').textContent = String(count).padStart(7, '0');
+  /* =========================================================================
+     3) CONTATORE VISITE
+        Prima era un contatore locale (localStorage): ogni visitatore partiva
+        da zero sul proprio browser e il numero non veniva mai sommato.
+        Ora il totale sta su Firestore ed è condiviso da tutti.
+     ========================================================================= */
+  const counterEl = $('visitCounter');
+  const paintCount = n => { counterEl.textContent = String(Math.max(0, Math.floor(n))).padStart(7, '0'); };
+
+  // Mostra subito l'ultimo totale conosciuto, poi lo allinea al server
+  const cached = store.get('st_visits_total');
+  if (cached !== null) paintCount(Number(cached) || 0);
+
+  function countLocalFallback() {
+    const n = (Number(store.get('st_visits_local')) || 0) + 1;
+    store.set('st_visits_local', n);
+    paintCount(n);
+  }
+
+  (async function initVisitCounter() {
+    if (!db) { countLocalFallback(); return; }
+    const ref = fb.doc(db, 'simonetuccio_meta', 'visits');
+
+    // Una visita = una sessione. Un refresh non gonfia il numero.
+    let newSession = true;
+    try {
+      if (sessionStorage.getItem('st_session_counted')) newSession = false;
+      else sessionStorage.setItem('st_session_counted', '1');
+    } catch (e) { /* storage bloccato: contiamo comunque la visita */ }
+
+    if (newSession) {
+      try {
+        await fb.setDoc(ref, { count: fb.increment(1), updatedAt: fb.serverTimestamp() }, { merge: true });
+      } catch (err) {
+        console.warn('[ST] Contatore: incremento rifiutato. Controlla le Firestore Rules di simonetuccio_meta/visits.', err);
+      }
+    }
+
+    fb.onSnapshot(ref,
+      snap => {
+        const n = snap.data() && snap.data().count;
+        if (typeof n === 'number') { paintCount(n); store.set('st_visits_total', n); }
+      },
+      err => {
+        console.warn('[ST] Contatore: lettura fallita, uso il conteggio locale.', err);
+        countLocalFallback();
+      }
+    );
   })();
 
+  /* =========================================================================
+     4) DIARIO / BLOG
+     ========================================================================= */
+  const emptyMsg = $('emptyPostsMsg');
+
   function escHtml(str) {
-    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+                      .replace(/"/g, '&quot;').replace(/'/g, '&#039;');
   }
   function formatDate(ts) {
     if (!ts) return '…';
     const d = ts.toDate ? ts.toDate() : new Date(ts);
-    return d.toLocaleDateString('it-IT',{day:'2-digit',month:'long',year:'numeric'}) + ' ▸ ' + d.toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
+    return d.toLocaleDateString('it-IT', { day: '2-digit', month: 'long', year: 'numeric' })
+         + ' ▸ ' + d.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' });
   }
 
   function renderPosts(docs) {
-    const container = document.getElementById('postsContainer');
-    const empty = document.getElementById('emptyPostsMsg');
+    const container = $('postsContainer');
     container.innerHTML = '';
-    if (docs.length === 0) { empty.style.display = 'block'; return; }
-    empty.style.display = 'none';
+    if (docs.length === 0) { emptyMsg.textContent = 'NESSUN POST NEL DIARIO ×'; emptyMsg.style.display = 'block'; return; }
+    emptyMsg.style.display = 'none';
     docs.forEach(docSnap => {
-      const p = docSnap.data();
-      const card = document.createElement('div');
+      const post = docSnap.data();
+      const card = document.createElement('article');
       card.className = 'post-card';
       card.innerHTML = `
         <div class="post-header">
-          <div class="post-date">${formatDate(p.createdAt)}</div>
-          <button class="post-delete" data-id="${docSnap.id}">× ELIMINA</button>
+          <div class="post-date">${formatDate(post.createdAt)}</div>
+          <button class="post-delete" data-id="${escHtml(docSnap.id)}">× ELIMINA</button>
         </div>
-        <div class="post-title">${escHtml(p.title)}</div>
-        <div class="post-content">${escHtml(p.content).replace(/\n/g,'<br/>')}</div>
+        <h3 class="post-title">${escHtml(post.title)}</h3>
+        <div class="post-content">${escHtml(post.content).replace(/\n/g, '<br/>')}</div>
       `;
       container.appendChild(card);
     });
     container.querySelectorAll('.post-delete').forEach(btn => {
       btn.addEventListener('click', async () => {
         if (!isAdmin) return;
-        try { await deleteDoc(doc(db, 'simonetuccio_posts', btn.dataset.id)); }
-        catch(e) { console.error(e); }
+        if (!confirm('Eliminare definitivamente questo post?')) return;
+        try { await fb.deleteDoc(fb.doc(db, 'simonetuccio_posts', btn.dataset.id)); }
+        catch (err) { console.error(err); alert('Eliminazione non riuscita.'); }
       });
     });
   }
 
-  const q = query(postsCol, orderBy('createdAt', 'desc'));
-  onSnapshot(q, snap => renderPosts(snap.docs), err => {
-    document.getElementById('emptyPostsMsg').textContent = 'ERRORE CARICAMENTO POSTS ×';
-    document.getElementById('emptyPostsMsg').style.display = 'block';
-  });
+  if (db) {
+    const postsCol = fb.collection(db, 'simonetuccio_posts');
+    fb.onSnapshot(fb.query(postsCol, fb.orderBy('createdAt', 'desc')),
+      snap => renderPosts(snap.docs),
+      err => {
+        console.error('[ST] Diario: lettura fallita.', err);
+        emptyMsg.textContent = 'DIARIO NON RAGGIUNGIBILE ×';
+        emptyMsg.style.display = 'block';
+      }
+    );
 
-  function setAdminMode(active) {
-    isAdmin = active;
-    document.body.classList.toggle('admin-mode', active);
-    document.getElementById('adminBadge').style.display = active ? 'block' : 'none';
-    document.getElementById('blogNewPostArea').style.display = active ? 'block' : 'none';
-    document.getElementById('adminNavBtn').textContent = active ? '⚙ ESCI ADMIN' : '⚙ ADMIN';
-    document.getElementById('adminNavBtn').style.color = active ? '#ff9900' : 'var(--cyan)';
-  }
-
-  const adminModal = document.getElementById('adminModal');
-  const adminPassInput = document.getElementById('adminPassInput');
-  const adminError = document.getElementById('adminError');
-
-  document.getElementById('adminNavBtn').addEventListener('click', e => {
-    e.preventDefault();
-    if (isAdmin) { setAdminMode(false); return; }
-    adminPassInput.value = '';
-    adminError.classList.remove('show');
-    adminModal.classList.add('open');
-    setTimeout(() => adminPassInput.focus(), 100);
-  });
-
-  const closeAdmin = () => adminModal.classList.remove('open');
-  document.getElementById('closeAdminModal').addEventListener('click', closeAdmin);
-  document.getElementById('closeAdminModal2').addEventListener('click', closeAdmin);
-  adminModal.addEventListener('click', e => { if (e.target === adminModal) closeAdmin(); });
-
-  document.getElementById('adminLoginBtn').addEventListener('click', () => {
-    if (adminPassInput.value === ADMIN_PASSWORD) {
-      adminError.classList.remove('show');
-      adminModal.classList.remove('open');
-      setAdminMode(true);
-    } else {
-      adminError.classList.add('show');
-      adminPassInput.value = '';
-      adminPassInput.focus();
-    }
-  });
-  adminPassInput.addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('adminLoginBtn').click(); });
-
-  const postModal = document.getElementById('postModal');
-  const openPostModal = () => {
-    document.getElementById('postTitleInput').value = '';
-    document.getElementById('postContentInput').value = '';
-    postModal.classList.add('open');
-    setTimeout(() => document.getElementById('postTitleInput').focus(), 100);
-  };
-  const closePostModal = () => postModal.classList.remove('open');
-
-  document.getElementById('newPostBtn').addEventListener('click', () => {
-    if (!isAdmin) { adminModal.classList.add('open'); return; }
-    openPostModal();
-  });
-  document.getElementById('newPostTrigger').addEventListener('click', openPostModal);
-  document.getElementById('closePostModal').addEventListener('click', closePostModal);
-  document.getElementById('closePostModal2').addEventListener('click', closePostModal);
-  postModal.addEventListener('click', e => { if (e.target === postModal) closePostModal(); });
-
-  document.getElementById('savePostBtn').addEventListener('click', async () => {
-    const title = document.getElementById('postTitleInput').value.trim();
-    const content = document.getElementById('postContentInput').value.trim();
-    if (!title || !content) return;
-    const btn = document.getElementById('savePostBtn');
-    btn.textContent = 'SALVO...'; btn.disabled = true;
-    try {
-      await addDoc(postsCol, { title, content, createdAt: serverTimestamp() });
-      closePostModal();
-    } catch(e) {
-      alert('Errore nel salvataggio. Controlla le Firestore Rules.');
-    } finally {
-      btn.textContent = 'PUBBLICA ▲'; btn.disabled = false;
-    }
-  });
-
-  document.querySelectorAll('.window-btns').forEach(group => {
-    group.querySelectorAll('span').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const win = btn.closest('.window') || btn.closest('.blog-title-bar')?.parentElement;
-        if (win) { win.style.opacity = '0.3'; setTimeout(() => win.style.opacity = '1', 200); }
-      });
+    $('savePostBtn').addEventListener('click', async () => {
+      const title = $('postTitleInput').value.trim();
+      const content = $('postContentInput').value.trim();
+      if (!title || !content) return;
+      const btn = $('savePostBtn');
+      btn.textContent = 'SALVO...'; btn.disabled = true;
+      try {
+        await fb.addDoc(postsCol, { title, content, createdAt: fb.serverTimestamp() });
+        closePostModal();
+      } catch (err) {
+        console.error(err);
+        alert('Errore nel salvataggio. Controlla le Firestore Rules.');
+      } finally {
+        btn.textContent = 'PUBBLICA ▲'; btn.disabled = false;
+      }
     });
-  });
+  } else {
+    emptyMsg.textContent = 'DIARIO NON RAGGIUNGIBILE ×';
+    emptyMsg.style.display = 'block';
+  }
 </script>
 </body>
 </html>
