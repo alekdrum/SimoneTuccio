@@ -98,7 +98,7 @@ loro contenuto.
 ## Test
 
 ```bash
-npm test          # 61 test: crittografia, indirizzi, database, installazione, variabili
+npm test          # 64 test: crittografia, indirizzi, database, installazione, variabili
 npm run test:e2e  # 54 test: applicazione vera guidata da un browser
 npm run test:all  # tutto, build compresa
 ```
@@ -121,6 +121,13 @@ sessione admin è valida) e poi carica il file direttamente sullo storage.
 **Il sito regge se il database cade.** `app/page.tsx` intercetta l'errore e
 mostra contenuti di riserva invece di una pagina di errore: per un sito
 vetrina è meglio incompleto che irraggiungibile.
+
+**Un contenuto nuovo non resta vuoto.** `getSettings()` sovrappone i valori
+salvati a quelli di partenza di `lib/schema.ts`. L'installazione inserisce
+solo le chiavi mancanti, quindi un'impostazione aggiunta al codice dopo che
+il database era già installato non avrebbe nessuna riga: senza questa
+sovrapposizione risulterebbe vuota sul sito, e non ci si accorgerebbe del
+perché. Quello che l'utente salva vince comunque, stringa vuota compresa.
 
 **Il collegamento al database è pigro.** Avviene alla prima query, non
 all'importazione: così la compilazione riesce anche prima che il database sia

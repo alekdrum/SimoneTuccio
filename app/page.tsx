@@ -56,7 +56,11 @@ export default async function Home() {
   const righe = (valore: string) => (valore ?? '').split('\n').map(r => r.trim()).filter(Boolean);
   const tickerItems = righe(settings.ticker_items);
   const blinkies = righe(settings.blinkies);
-  const soundcloud = soundcloudEmbedUrl(settings.soundcloud_url ?? '');
+  // Se il campo dedicato è vuoto si usa il link social di SoundCloud:
+  // il player compare senza dover compilare due volte la stessa cosa.
+  const soundcloud = soundcloudEmbedUrl(
+    settings.soundcloud_url || socials.find(s => s.platform === 'soundcloud')?.url || ''
+  );
 
   const jsonLd = {
     '@context': 'https://schema.org',

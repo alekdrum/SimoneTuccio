@@ -110,9 +110,12 @@ if (!await waitForServer()) {
 for (const [k, v] of Object.entries({
   profile_bio: 'Bio iniziale di prova',
   status_body: 'Riga uno.\n\n**Grassetto** e testo normale.',
-  ticker_items: '★ PRIMA NOTIZIA ▲\nSECONDA NOTIZIA ▲',
-  soundcloud_url: 'soundcloud.com/simonetuccio'
+  ticker_items: '★ PRIMA NOTIZIA ▲\nSECONDA NOTIZIA ▲'
 })) await shim.db.query(`UPDATE settings SET value = $2 WHERE key = $1`, [k, v]);
+
+// Si riproduce il caso reale: database installato prima che queste due
+// impostazioni esistessero nel codice, quindi senza le loro righe.
+await shim.db.query(`DELETE FROM settings WHERE key IN ('blinkies', 'soundcloud_url')`);
 
 await shim.db.query(
   `INSERT INTO archive_items (title,description,kind,url,filename,size_bytes,content_type)
@@ -198,7 +201,7 @@ try {
     // ---------- blinkies
     const blinkies = await page.locator('.blinkie').allTextContents();
     check('blinkies: compaiono le targhette', blinkies.length >= 7, `trovate ${blinkies.length}`);
-    check('blinkies: il testo arriva dal database',
+    check('blinkies: compaiono anche senza la riga nel database',
       blinkies.includes('HAI VISTO LA TV?'), blinkies.slice(0, 3).join(' / '));
     check('blinkies: niente più badge 88x31',
       (await page.locator('.banner88').count()) === 0);
@@ -207,7 +210,8 @@ try {
 
     // ---------- player SoundCloud
     const sc = page.locator('iframe[title*="SoundCloud"]');
-    check('player: SoundCloud presente quando configurato', (await sc.count()) === 1);
+    check('player: SoundCloud compare anche senza campo dedicato, dal link social',
+      (await sc.count()) === 1);
     const scSrc = await sc.getAttribute('src');
     check('player: SoundCloud punta al lettore ufficiale',
       scSrc?.startsWith('https://w.soundcloud.com/player/'), String(scSrc).slice(0, 50));

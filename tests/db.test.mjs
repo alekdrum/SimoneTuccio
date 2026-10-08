@@ -86,6 +86,26 @@ describe('impostazioni', () => {
     assert.equal((await q.getSettings()).profile_bio, 'prima versione');
   });
 
+  test('un contenuto aggiunto dopo l\'installazione non risulta vuoto', async () => {
+    // È il caso reale: il database era stato installato prima che
+    // "blinkies" esistesse nel codice, quindi la riga non c'era.
+    await shim.db.query(`DELETE FROM settings WHERE key = 'blinkies'`);
+    const settings = await q.getSettings();
+    assert.ok(settings.blinkies && settings.blinkies.includes('HAI VISTO LA TV?'),
+      'senza riga nel database deve valere il contenuto di partenza');
+  });
+
+  test('un valore salvato dall\'utente vince sempre sul valore di partenza', async () => {
+    await q.setSetting('blinkies', 'solo la mia frase');
+    assert.equal((await q.getSettings()).blinkies, 'solo la mia frase');
+  });
+
+  test('anche una stringa vuota salvata di proposito viene rispettata', async () => {
+    await q.setSetting('blinkies', '');
+    assert.equal((await q.getSettings()).blinkies, '');
+    await shim.db.query(`DELETE FROM settings WHERE key = 'blinkies'`);
+  });
+
   test('il secondo salvataggio sovrascrive invece di duplicare', async () => {
     await q.setSetting('profile_bio', 'seconda versione');
     const settings = await q.getSettings();

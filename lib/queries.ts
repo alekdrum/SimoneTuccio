@@ -1,11 +1,21 @@
 import { sql } from './db';
 import type { Post, Social, ArchiveItem, Settings } from './types';
+import { DEFAULT_SETTINGS } from './schema';
 
 /* ------------------------------------------------------------- impostazioni */
 
+/**
+ * Le impostazioni salvate, sopra i valori di partenza.
+ *
+ * L'installazione inserisce solo le chiavi che mancano, quindi un contenuto
+ * aggiunto al codice dopo che il database era già installato non avrebbe
+ * nessuna riga e risulterebbe vuoto sul sito. Sovrapponendo qui i valori
+ * di DEFAULT_SETTINGS, ogni nuova impostazione funziona da subito senza
+ * dover rilanciare niente; quelle che l'utente ha davvero salvato vincono.
+ */
 export async function getSettings(): Promise<Settings> {
   const rows = await sql`SELECT key, value FROM settings` as Array<{ key: string; value: string }>;
-  return Object.fromEntries(rows.map(r => [r.key, r.value]));
+  return { ...DEFAULT_SETTINGS, ...Object.fromEntries(rows.map(r => [r.key, r.value])) };
 }
 
 export async function setSetting(key: string, value: string) {
