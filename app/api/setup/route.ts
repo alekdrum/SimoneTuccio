@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { install, tokenMatches } from '@/lib/install';
 import { resolveConnectionString } from '@/lib/db';
+import { resolveBlobToken } from '@/lib/blob';
 
 export const dynamic = 'force-dynamic';
 
@@ -37,7 +38,10 @@ export async function GET(request: Request) {
     const resolved = resolveConnectionString();
     return NextResponse.json({
       database: resolved ? `trovata nella variabile ${resolved[0]}` : 'NESSUNA VARIABILE TROVATA',
-      blob: process.env.BLOB_READ_WRITE_TOKEN ? 'configurato' : 'MANCANTE',
+      blob: (() => {
+        const b = resolveBlobToken();
+        return b ? `trovato nella variabile ${b[0]}` : 'NESSUNA VARIABILE TROVATA';
+      })(),
       sessione: (process.env.SESSION_SECRET?.length ?? 0) >= 32 ? 'configurata' : 'MANCANTE O TROPPO CORTA',
       adminUsername: process.env.ADMIN_USERNAME ? 'impostato' : 'MANCANTE',
       adminPassword: process.env.ADMIN_PASSWORD ? 'impostata' : 'MANCANTE'

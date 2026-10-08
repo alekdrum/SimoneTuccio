@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { handleUpload, type HandleUploadBody } from '@vercel/blob/client';
 import { currentAdmin } from '@/lib/auth';
+import { blobToken } from '@/lib/blob';
 
 export const dynamic = 'force-dynamic';
 
@@ -33,7 +34,9 @@ export async function POST(request: Request) {
           addRandomSuffix: true
         };
       },
-      onUploadCompleted: async () => { /* la riga nel database la scrive l'azione lato server */ }
+      onUploadCompleted: async () => { /* la riga nel database la scrive l'azione lato server */ },
+      // Esplicito: il pacchetto da solo guarderebbe solo BLOB_READ_WRITE_TOKEN
+      token: blobToken()
     });
 
     return NextResponse.json(result);

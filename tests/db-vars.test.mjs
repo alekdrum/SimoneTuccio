@@ -51,3 +51,34 @@ describe('nome della variabile del database', () => {
     assert.equal(resolveConnectionString()[1], 'postgresql://a/b');
   });
 });
+
+/* ------------------------------------------------------------ token Blob -- */
+
+const VARS_BLOB = ['BLOB_READ_WRITE_TOKEN', 'BLOB_BLOB_READ_WRITE_TOKEN', 'VERCEL_BLOB_READ_WRITE_TOKEN'];
+const { resolveBlobToken, blobToken } = await import('../lib/blob.ts');
+
+describe('nome della variabile del token Blob', () => {
+  beforeEach(() => { for (const v of VARS_BLOB) delete process.env[v]; });
+
+  test('senza variabili non trova nulla', () => {
+    assert.equal(resolveBlobToken(), null);
+    assert.equal(blobToken(), undefined);
+  });
+
+  test('riconosce il nome standard', () => {
+    process.env.BLOB_READ_WRITE_TOKEN = 'vercel_blob_rw_abc';
+    assert.deepEqual(resolveBlobToken(), ['BLOB_READ_WRITE_TOKEN', 'vercel_blob_rw_abc']);
+    assert.equal(blobToken(), 'vercel_blob_rw_abc');
+  });
+
+  test('riconosce il nome con prefisso doppio', () => {
+    process.env.BLOB_BLOB_READ_WRITE_TOKEN = 'vercel_blob_rw_xyz';
+    assert.equal(resolveBlobToken()[0], 'BLOB_BLOB_READ_WRITE_TOKEN');
+  });
+
+  test('il nome standard ha la precedenza', () => {
+    process.env.BLOB_BLOB_READ_WRITE_TOKEN = 'secondo';
+    process.env.BLOB_READ_WRITE_TOKEN = 'primo';
+    assert.equal(blobToken(), 'primo');
+  });
+});

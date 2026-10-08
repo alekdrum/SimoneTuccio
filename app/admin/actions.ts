@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { del } from '@vercel/blob';
+import { blobToken } from '@/lib/blob';
 import { login, setSessionCookie, clearSessionCookie, currentAdmin } from '@/lib/auth';
 import {
   setSetting, createPost, updatePost, deletePost,
@@ -206,7 +207,7 @@ export async function deleteArchiveItemAction(formData: FormData) {
   // continua a occupare spazio e nessuno saprebbe più che esiste.
   const item = await getArchiveItem(id);
   if (item) {
-    try { await del(item.url); }
+    try { await del(item.url, { token: blobToken() }); }
     catch (err) { console.error('[ST] cancellazione file su Blob fallita:', err); }
   }
   await deleteArchiveItem(id);

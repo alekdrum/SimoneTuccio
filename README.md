@@ -69,7 +69,16 @@ primo valorizzato, così non serve rinominare nulla a mano:
 `DATABASE_URL` → `DATABASE_DATABASE_URL` → `POSTGRES_URL` →
 `DATABASE_POSTGRES_URL` → e poi le varianti senza pool di connessioni.
 
-Per sapere quale ha trovato, con `SETUP_TOKEN` impostata:
+Lo stesso vale per il token di Blob: si cercano `BLOB_READ_WRITE_TOKEN`,
+`BLOB_BLOB_READ_WRITE_TOKEN`, `VERCEL_BLOB_READ_WRITE_TOKEN`, e il valore
+trovato viene passato esplicitamente alle chiamate.
+
+**Lo Store Blob va creato con accesso `Public`.** Le foto e i file
+dell'archivio sono fatti per essere visti e scaricati da chiunque: un
+archivio privato vivrebbe su un host separato e richiederebbe un header di
+autorizzazione a ogni richiesta, rompendo immagini e download.
+
+Per sapere quali variabili ha trovato, con `SETUP_TOKEN` impostata:
 
 ```
 https://<il-sito>/api/setup?token=<SETUP_TOKEN>&check=1
@@ -83,7 +92,7 @@ loro contenuto.
 ## Test
 
 ```bash
-npm test          # 44 test: crittografia, database, installazione, variabili
+npm test          # 48 test: crittografia, database, installazione, variabili
 npm run test:e2e  # 42 test: applicazione vera guidata da un browser
 npm run test:all  # tutto, build compresa
 ```
