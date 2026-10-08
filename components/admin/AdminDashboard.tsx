@@ -214,53 +214,71 @@ function PostsTab({ posts }: { posts: Post[] }) {
 
 /* ---------------------------------------------------------------- SOCIAL --- */
 
-function SocialsTab({ socials }: { socials: Social[] }) {
+/**
+ * Ogni riga ha il proprio stato: così l'esito del salvataggio compare
+ * accanto alla riga che hai toccato. Prima il messaggio era uno solo in
+ * fondo alla scheda, e dopo un salvataggio riuscito restava lì a dire "✓"
+ * anche se il tentativo successivo non era partito.
+ */
+function SocialRow({ social }: { social?: Social }) {
   const [state, action, pending] = useActionState<ActionState, FormData>(saveSocialAction, {});
+  const esistente = Boolean(social);
 
+  return (
+    <div style={{ marginBottom: 10 }}>
+      <form className="admin-row admin-row-form" action={action} style={{ marginBottom: 0 }}>
+        {esistente && <input type="hidden" name="id" value={social!.id} readOnly />}
+
+        <select name="platform" defaultValue={social?.platform ?? 'other'} aria-label="Piattaforma">
+          {PLATFORMS.map(p => <option key={p} value={p}>{p}</option>)}
+        </select>
+
+        <input name="label" defaultValue={social?.label ?? ''} placeholder="ETICHETTA"
+               aria-label="Etichetta" style={{ maxWidth: 140 }} />
+
+        {/* Niente type="url": bloccava l'invio senza spiegazioni quando
+            l'indirizzo era incollato senza "https://". Ci pensa il server. */}
+        <input name="url" type="text" inputMode="url" autoComplete="url"
+               defaultValue={social?.url ?? ''} placeholder="soundcloud.com/simonetuccio"
+               aria-label="Indirizzo" required />
+
+        <input name="position" type="number" defaultValue={social?.position ?? 99}
+               aria-label="Posizione" style={{ maxWidth: 70 }} />
+
+        <label className="admin-check" style={{ margin: 0 }}>
+          <input type="checkbox" name="visible" defaultChecked={social?.visible ?? true} />
+          <span>Visibile</span>
+        </label>
+
+        <button className="btn-primary" type="submit" disabled={pending}>
+          {pending ? '…' : esistente ? 'SALVA' : 'AGGIUNGI'}
+        </button>
+
+        {esistente && (
+          <button className="btn-danger" type="submit" formAction={deleteSocialAction}
+                  onClick={e => { if (!confirm(`Eliminare ${social!.label}?`)) e.preventDefault(); }}>
+            ×
+          </button>
+        )}
+      </form>
+      <Feedback state={state} />
+    </div>
+  );
+}
+
+function SocialsTab({ socials }: { socials: Social[] }) {
   return (
     <>
       <h2 className="admin-h2">Link social</h2>
       <p className="admin-hint">
-        L&apos;ordine sul sito segue il numero «posizione»: più basso, più in alto.
-        SoundCloud è impostato a 0 per restare per primo.
+        L&apos;indirizzo si può incollare come viene: &laquo;https://&raquo; lo mette il sito se manca.
+        L&apos;ordine segue il numero «posizione»: più basso, più in alto.
       </p>
 
-      {socials.map(social => (
-        <form className="admin-row admin-row-form" action={action} key={social.id}>
-          <input type="hidden" name="id" value={social.id} readOnly />
-          <select name="platform" defaultValue={social.platform} aria-label="Piattaforma">
-            {PLATFORMS.map(p => <option key={p} value={p}>{p}</option>)}
-          </select>
-          <input name="label" defaultValue={social.label} aria-label="Etichetta" style={{ maxWidth: 140 }} />
-          <input name="url" type="url" defaultValue={social.url} aria-label="Indirizzo" />
-          <input name="position" type="number" defaultValue={social.position} aria-label="Posizione" style={{ maxWidth: 70 }} />
-          <label className="admin-check" style={{ margin: 0 }}>
-            <input type="checkbox" name="visible" defaultChecked={social.visible} />
-            <span>Visibile</span>
-          </label>
-          <button className="btn-primary" type="submit" disabled={pending}>SALVA</button>
-          <button className="btn-danger" type="submit" formAction={deleteSocialAction}
-                  onClick={e => { if (!confirm(`Eliminare ${social.label}?`)) e.preventDefault(); }}>
-            ×
-          </button>
-        </form>
-      ))}
+      {socials.map(social => <SocialRow key={social.id} social={social} />)}
 
       <h3 className="admin-h3" style={{ marginTop: 24 }}>Aggiungi un social</h3>
-      <form className="admin-row admin-row-form" action={action}>
-        <select name="platform" defaultValue="other" aria-label="Piattaforma">
-          {PLATFORMS.map(p => <option key={p} value={p}>{p}</option>)}
-        </select>
-        <input name="label" placeholder="ETICHETTA" aria-label="Etichetta" style={{ maxWidth: 140 }} />
-        <input name="url" type="url" placeholder="https://…" aria-label="Indirizzo" required />
-        <input name="position" type="number" defaultValue={99} aria-label="Posizione" style={{ maxWidth: 70 }} />
-        <label className="admin-check" style={{ margin: 0 }}>
-          <input type="checkbox" name="visible" defaultChecked />
-          <span>Visibile</span>
-        </label>
-        <button className="btn-primary" type="submit" disabled={pending}>AGGIUNGI</button>
-      </form>
-      <Feedback state={state} />
+      <SocialRow />
     </>
   );
 }

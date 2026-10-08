@@ -292,6 +292,38 @@ try {
     check('admin: il grassetto dell\'articolo è formattato',
       (await pubblica.locator('.post-content strong').first().textContent()) === 'grassetto');
 
+    // ---------- social: il caso che era rotto
+    page.on('dialog', d => d.accept());
+    await page.getByRole('button', { name: 'SOCIAL' }).click();
+    await page.waitForTimeout(600);
+
+    const riga = page.locator('form.admin-row-form').first();
+    // Si incolla senza "https://", come capita davvero
+    await riga.locator('input[name=url]').fill('soundcloud.com/simonetuccio');
+    await riga.getByRole('button', { name: 'SALVA' }).click();
+    await page.waitForTimeout(1600);
+
+    const salvato = (await shim.db.query(`SELECT url FROM socials WHERE platform = 'soundcloud'`)).rows[0]?.url;
+    check('social: un indirizzo senza https:// viene salvato e completato',
+      salvato === 'https://soundcloud.com/simonetuccio', String(salvato));
+    check('social: l\'esito compare accanto alla riga modificata',
+      await riga.locator('xpath=..').locator('.msg-ok').isVisible());
+
+    // Un indirizzo non valido deve dare errore, non un falso "salvato"
+    await riga.locator('input[name=url]').fill('non un indirizzo');
+    await riga.getByRole('button', { name: 'SALVA' }).click();
+    await page.waitForTimeout(1600);
+    check('social: un indirizzo non valido mostra un errore',
+      await riga.locator('xpath=..').locator('.msg-error').isVisible());
+    const invariato = (await shim.db.query(`SELECT url FROM socials WHERE platform = 'soundcloud'`)).rows[0]?.url;
+    check('social: dopo un errore il valore buono resta nel database',
+      invariato === 'https://soundcloud.com/simonetuccio', String(invariato));
+
+    await pubblica.reload({ waitUntil: 'domcontentloaded' });
+    const href = await pubblica.locator('.social-link').first().getAttribute('href');
+    check('social: il link corretto arriva sul sito pubblico',
+      href === 'https://soundcloud.com/simonetuccio', String(href));
+
     // uscita
     await page.getByRole('button', { name: 'ESCI' }).click();
     await page.waitForTimeout(1200);

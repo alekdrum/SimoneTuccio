@@ -92,8 +92,8 @@ loro contenuto.
 ## Test
 
 ```bash
-npm test          # 48 test: crittografia, database, installazione, variabili
-npm run test:e2e  # 42 test: applicazione vera guidata da un browser
+npm test          # 56 test: crittografia, indirizzi, database, installazione, variabili
+npm run test:e2e  # 47 test: applicazione vera guidata da un browser
 npm run test:all  # tutto, build compresa
 ```
 

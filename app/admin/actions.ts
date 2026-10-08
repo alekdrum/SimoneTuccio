@@ -4,6 +4,7 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { del } from '@vercel/blob';
 import { blobToken } from '@/lib/blob';
+import { normalizeUrl } from '@/lib/url';
 import { login, setSessionCookie, clearSessionCookie, currentAdmin } from '@/lib/auth';
 import {
   setSetting, createPost, updatePost, deletePost,
@@ -126,8 +127,8 @@ export async function deletePostAction(formData: FormData) {
 export async function saveSocialAction(_prev: ActionState, formData: FormData): Promise<ActionState> {
   try {
     await requireAdmin();
-    const url = String(formData.get('url') ?? '').trim();
-    if (!/^https:\/\//.test(url)) return { error: 'Il link deve iniziare con https://' };
+    const url = normalizeUrl(String(formData.get('url') ?? ''));
+    if (!url) return { error: 'Indirizzo non valido. Esempio: soundcloud.com/simonetuccio' };
 
     await upsertSocial({
       id: Number(formData.get('id')) || undefined,
