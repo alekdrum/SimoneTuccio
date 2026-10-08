@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { install, tokenMatches } from '@/lib/install';
+import { resolveConnectionString } from '@/lib/db';
 
 export const dynamic = 'force-dynamic';
 
@@ -28,6 +29,19 @@ export async function GET(request: Request) {
   const given = new URL(request.url).searchParams.get('token') ?? '';
   if (!tokenMatches(given, expected)) {
     return NextResponse.json({ error: 'Not found' }, { status: 404 });
+  }
+
+  // ?check=1 non scrive nulla: dice solo che cosa risulta configurato.
+  // Mostra i NOMI delle variabili, mai il loro contenuto.
+  if (new URL(request.url).searchParams.get('check')) {
+    const resolved = resolveConnectionString();
+    return NextResponse.json({
+      database: resolved ? `trovata nella variabile ${resolved[0]}` : 'NESSUNA VARIABILE TROVATA',
+      blob: process.env.BLOB_READ_WRITE_TOKEN ? 'configurato' : 'MANCANTE',
+      sessione: (process.env.SESSION_SECRET?.length ?? 0) >= 32 ? 'configurata' : 'MANCANTE O TROPPO CORTA',
+      adminUsername: process.env.ADMIN_USERNAME ? 'impostato' : 'MANCANTE',
+      adminPassword: process.env.ADMIN_PASSWORD ? 'impostata' : 'MANCANTE'
+    });
   }
 
   const username = process.env.ADMIN_USERNAME?.trim();

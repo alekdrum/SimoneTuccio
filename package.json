@@ -9,7 +9,7 @@
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
     "db:setup": "node --experimental-strip-types --no-warnings --import ./tests/register-ts.mjs --env-file=.env.local scripts/setup-db.mjs",
-    "test": "node --experimental-strip-types --no-warnings --import ./tests/register-ts.mjs --test tests/crypto.test.mjs tests/db.test.mjs",
+    "test": "node --experimental-strip-types --no-warnings --import ./tests/register-ts.mjs --test tests/crypto.test.mjs tests/db-vars.test.mjs tests/db.test.mjs",
     "test:e2e": "node --experimental-strip-types --no-warnings --import ./tests/register-ts.mjs tests/e2e.mjs",
     "test:all": "npm run test && npm run build && npm run test:e2e"
   },

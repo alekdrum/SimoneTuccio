@@ -38,7 +38,9 @@ const server = spawn(process.execPath, [nextBin, 'start', '-p', String(PORT)], {
   cwd: new URL('..', import.meta.url).pathname,
   env: {
     ...process.env,
-    DATABASE_URL: shim.connectionString,
+    // Di proposito NON si usa DATABASE_URL: si passa il nome con prefisso
+    // prodotto dall'integrazione Neon su Vercel, per provare quel caso.
+    DATABASE_DATABASE_URL: shim.connectionString,
     NEON_FETCH_ENDPOINT: shim.endpoint,
     SESSION_SECRET: 'z'.repeat(48),
     SETUP_TOKEN,
@@ -87,6 +89,12 @@ if (!await waitForServer()) {
 
   const tokenSbagliato = await fetch(`${BASE}/api/setup?token=sbagliato-ma-lungo-uguale`);
   check('installazione: token sbagliato risponde 404', tokenSbagliato.status === 404, `stato ${tokenSbagliato.status}`);
+
+  const diagnostica = await (await fetch(`${BASE}/api/setup?token=${encodeURIComponent(SETUP_TOKEN)}&check=1`)).json();
+  check('diagnostica: trova il database con il nome con prefisso',
+    diagnostica.database === 'trovata nella variabile DATABASE_DATABASE_URL', JSON.stringify(diagnostica));
+  check('diagnostica: non rivela mai i valori',
+    !JSON.stringify(diagnostica).includes(shim.connectionString));
 
   const esito = await fetch(`${BASE}/api/setup?token=${encodeURIComponent(SETUP_TOKEN)}`);
   const corpo = await esito.json();

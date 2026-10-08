@@ -54,18 +54,37 @@ viene aggiornata (utile se la dimentichi).
 | Variabile | A cosa serve | Dove si prende |
 |---|---|---|
 | `DATABASE_URL` | Database Postgres | Neon → Connection string (usa la **pooled**) |
+| | *Collegando Neon su Vercel il nome può essere diverso — vedi sotto* | |
 | `BLOB_READ_WRITE_TOKEN` | Caricamento file | Impostata da sola collegando uno Store Blob al progetto Vercel |
 | `SESSION_SECRET` | Firma dei cookie di sessione | `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"` |
 | `SETUP_TOKEN` | Abilita `/api/setup`. **Da togliere dopo l'installazione** | La scegli tu (almeno 16 caratteri) |
 | `ADMIN_USERNAME` / `ADMIN_PASSWORD` | Utente del pannello, letti solo in installazione | Le scegli tu (password di almeno 12 caratteri) |
+
+**Il nome della variabile del database non è obbligato.** L'integrazione
+Neon su Vercel a volte antepone un prefisso a tutte le variabili che crea,
+e la stringa di connessione finisce per chiamarsi `DATABASE_DATABASE_URL`
+invece di `DATABASE_URL`. Il codice prova questi nomi in ordine e usa il
+primo valorizzato, così non serve rinominare nulla a mano:
+
+`DATABASE_URL` → `DATABASE_DATABASE_URL` → `POSTGRES_URL` →
+`DATABASE_POSTGRES_URL` → e poi le varianti senza pool di connessioni.
+
+Per sapere quale ha trovato, con `SETUP_TOKEN` impostata:
+
+```
+https://<il-sito>/api/setup?token=<SETUP_TOKEN>&check=1
+```
+
+Non scrive nulla e riporta solo i **nomi** delle variabili trovate, mai il
+loro contenuto.
 
 `NEON_FETCH_ENDPOINT` esiste solo per i test: in produzione va lasciata vuota.
 
 ## Test
 
 ```bash
-npm test          # 37 test: crittografia, database, installazione
-npm run test:e2e  # 40 test: applicazione vera guidata da un browser
+npm test          # 44 test: crittografia, database, installazione, variabili
+npm run test:e2e  # 42 test: applicazione vera guidata da un browser
 npm run test:all  # tutto, build compresa
 ```
 
@@ -109,7 +128,8 @@ incrementi in parallelo contino esattamente venti.
 2. Nel progetto, **Storage** → aggiungi **Neon** e uno **Store Blob**:
    Vercel imposta da sola `DATABASE_URL` e `BLOB_READ_WRITE_TOKEN`.
 3. Imposta `SESSION_SECRET`, `SETUP_TOKEN`, `ADMIN_USERNAME`, `ADMIN_PASSWORD`.
-4. Apri `https://<il-sito>/api/setup?token=<SETUP_TOKEN>` una volta sola.
+4. Controlla la configurazione con `…/api/setup?token=<SETUP_TOKEN>&check=1`,
+   poi installa con `…/api/setup?token=<SETUP_TOKEN>` una volta sola.
 5. Rimuovi `SETUP_TOKEN`, `ADMIN_USERNAME` e `ADMIN_PASSWORD`.
 6. Collega il dominio `www.simonetuccio.it` al progetto e aggiorna i DNS
    presso il registrar seguendo le istruzioni di Vercel.
