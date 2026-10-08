@@ -1,0 +1,30 @@
+{
+  "name": "simonetuccio",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit",
+    "db:setup": "node --env-file=.env.local scripts/setup-db.mjs",
+    "test": "node --experimental-strip-types --no-warnings --import ./tests/register-ts.mjs --test tests/crypto.test.mjs tests/db.test.mjs",
+    "test:e2e": "node --experimental-strip-types --no-warnings --import ./tests/register-ts.mjs tests/e2e.mjs",
+    "test:all": "npm run test && npm run build && npm run test:e2e"
+  },
+  "dependencies": {
+    "@neondatabase/serverless": "^1.0.1",
+    "@vercel/blob": "^1.1.0",
+    "next": "^15.5.4",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "^0.5.8",
+    "@types/node": "^22.18.1",
+    "@types/react": "^19.1.13",
+    "@types/react-dom": "^19.1.9",
+    "typescript": "^5.9.2"
+  }
+}

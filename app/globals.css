@@ -1,0 +1,448 @@
+/* =========================================================================
+   simonetuccio.it — foglio di stile unico.
+   Scritto mobile-first: le regole base valgono sul telefono, i @media
+   (min-width) aggiungono il desktop. È l'opposto del sito precedente, che
+   partiva dal desktop e rattoppava il mobile in fondo.
+   ========================================================================= */
+
+:root {
+  --bg: #111118;
+  --bg2: #1a1a24;
+  --panel: #16161f;
+  --border: #2a2a3a;
+  --purple: #7c3aed;
+  --purple-light: #9d5cf6;
+  --cyan: #00e5cc;
+  --green: #00ff41;
+  --amber: #ff9900;
+  --red: #ff4444;
+  --text: #e0e0e8;
+  --text-dim: #9999aa;
+
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  --font-display: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-ui: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+
+  --tap: 44px;            /* area minima toccabile */
+  --gap: 12px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;   /* Safari iOS non ingrandisce da solo */
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-ui);
+  font-size: 15px;
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* --- CURSORE A STELLA ----------------------------------------------------
+   Disattivabile: il body perde .star-cursor e torna il cursore di sistema.
+   Un cursore personalizzato imposto a forza è un fastidio, quindi è una
+   scelta, non un obbligo. Sui dispositivi touch non si applica mai. */
+@media (hover: hover) and (pointer: fine) {
+  html[data-star-cursor="on"] body,
+  html[data-star-cursor="on"] body * {
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'%3E%3Cpath d='M14 2l3.3 8.1 8.7.6-6.7 5.6 2.1 8.5L14 20.2 6.6 24.8l2.1-8.5L2 10.7l8.7-.6z' fill='%2300e5cc' stroke='%23111118' stroke-width='1.4'/%3E%3C/svg%3E") 14 14, auto;
+  }
+  html[data-star-cursor="on"] body :is(a, button, [role="button"], summary, label, input, textarea, select) {
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'%3E%3Cpath d='M14 2l3.3 8.1 8.7.6-6.7 5.6 2.1 8.5L14 20.2 6.6 24.8l2.1-8.5L2 10.7l8.7-.6z' fill='%23ff9900' stroke='%23111118' stroke-width='1.4'/%3E%3C/svg%3E") 14 14, pointer;
+  }
+}
+
+/* Righe orizzontali da tubo catodico, sopra tutto ma non cliccabili */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.08) 2px, rgba(0,0,0,0.08) 4px);
+  pointer-events: none;
+  z-index: 9999;
+}
+
+:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+
+a { color: var(--cyan); }
+img { max-width: 100%; display: block; }
+
+.mono { font-family: var(--font-mono); }
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+}
+
+/* ====================================================== TICKER / NOTIZIE === */
+.ticker-wrap {
+  background: #0a0a0f;
+  border-bottom: 1px solid var(--purple);
+  overflow: hidden;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  font-family: var(--font-mono);
+}
+.ticker-label {
+  background: var(--purple); color: #fff;
+  font-size: 10px; letter-spacing: 1px;
+  padding: 0 8px; height: 100%;
+  display: flex; align-items: center; flex-shrink: 0;
+}
+.ticker-viewport { overflow: hidden; flex: 1; }
+.ticker-track { display: flex; white-space: nowrap; animation: ticker 30s linear infinite; }
+.ticker-track span { font-size: 10px; color: var(--cyan); padding: 0 28px 0 14px; letter-spacing: 1px; }
+@keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+/* ================================================================= NAV ==== */
+nav.site-nav {
+  background: #0c0c14;
+  border-bottom: 2px solid var(--purple);
+  position: sticky; top: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 10px; gap: 8px; min-height: 52px;
+}
+.nav-logo {
+  font-family: var(--font-display);
+  font-size: 16px; font-weight: bold; letter-spacing: 1.5px;
+  color: var(--text); display: flex; align-items: center; gap: 6px;
+  animation: glitch 6s infinite; white-space: nowrap;
+}
+.nav-logo .star { color: var(--cyan); }
+@keyframes glitch {
+  0%,90%,100% { transform: none; }
+  92% { transform: skewX(-4deg) translateX(2px); }
+  94% { transform: skewX(4deg) translateX(-2px); }
+  96% { transform: none; }
+}
+.nav-links { display: flex; gap: 2px; align-items: center; }
+.nav-links a {
+  font-family: var(--font-mono);
+  font-size: 11px; letter-spacing: 1px;
+  color: var(--text-dim); text-decoration: none;
+  border: 1px solid transparent;
+  min-height: var(--tap);
+  display: flex; align-items: center; padding: 0 10px;
+  transition: color .15s, border-color .15s, background .15s;
+}
+.nav-links a:hover, .nav-links a:focus-visible {
+  color: var(--cyan); border-color: var(--cyan); background: rgba(0,229,204,.06);
+}
+
+/* ============================================================== LAYOUT ==== */
+.page-wrap {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--gap) 10px 32px;
+  display: grid;
+  grid-template-columns: 1fr;        /* mobile: colonna unica */
+  gap: var(--gap);
+}
+.sidebar, .main-col { display: flex; flex-direction: column; gap: var(--gap); min-width: 0; }
+
+@media (min-width: 860px) {
+  :root { --gap: 16px; }
+  body { font-size: 14px; }
+  .page-wrap { grid-template-columns: 300px minmax(0, 1fr); padding: 20px 16px 40px; }
+  nav.site-nav { padding: 0 20px; }
+  .nav-logo { font-size: 22px; letter-spacing: 3px; }
+  .ticker-wrap { height: 28px; }
+  .ticker-label, .ticker-track span { font-size: 11px; }
+}
+
+/* ============================================================= FINESTRE === */
+.window { background: var(--panel); border: 1px solid var(--border); border-radius: 2px; overflow: hidden; }
+.window-title {
+  background: var(--purple); color: #fff;
+  font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 1.5px;
+  padding: 7px 8px;
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  user-select: none; cursor: pointer;
+}
+.window-title .wt-label { display: flex; align-items: center; gap: 6px; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.window-btns { display: flex; gap: 4px; flex-shrink: 0; }
+.window-btns button {
+  width: var(--tap); height: var(--tap); padding: 0;
+  background: none; border: 1px solid rgba(255,255,255,.4); color: rgba(255,255,255,.9);
+  font-family: var(--font-mono); font-size: 14px; line-height: 1;
+  display: flex; align-items: center; justify-content: center; cursor: pointer;
+}
+/* I tre bottoni in stile Windows hanno senso col mouse. Sul telefono
+   diventerebbero tre bersagli da sbagliare: ne resta uno, grande. */
+.window-btns .wb-desktop { display: none; }
+.window-btns button:hover { background: rgba(255,255,255,.2); }
+.window.collapsed .window-body { display: none; }
+.window-body { padding: 12px; }
+@media (min-width: 860px) {
+  .window-title { font-size: 11px; letter-spacing: 2px; padding: 6px 10px; }
+  .window-btns button { width: 16px; height: 16px; font-size: 9px; }
+  .window-btns .wb-desktop { display: flex; }
+  .window-body { padding: 14px; }
+}
+
+/* ============================================================== PROFILO === */
+.profile-img-wrap { position: relative; border: 2px solid var(--purple); overflow: hidden; aspect-ratio: 1; background: var(--bg2); }
+.profile-img-wrap img { width: 100%; height: 100%; object-fit: cover; filter: saturate(.85) contrast(1.05); }
+.profile-name {
+  font-family: var(--font-display); font-weight: bold;
+  font-size: 22px; line-height: 1.1; color: var(--cyan);
+  letter-spacing: 1.5px; margin-top: 10px;
+}
+.profile-name .xxx { color: var(--text-dim); font-size: 14px; font-weight: normal; letter-spacing: 2px; }
+.profile-bio { color: var(--text-dim); font-size: 13px; line-height: 1.6; margin: 6px 0 10px; }
+.section-label {
+  font-family: var(--font-mono); font-size: 10px; color: var(--cyan);
+  letter-spacing: 2px; margin-bottom: 8px; display: flex; align-items: center; gap: 6px;
+}
+.section-label::before { content: '⚡'; }
+.mood-img { border: 1px solid var(--border); overflow: hidden; aspect-ratio: 16/9; background: var(--bg2); }
+.mood-img img { width: 100%; height: 100%; object-fit: cover; filter: saturate(.6); }
+
+/* =============================================================== SOCIAL === */
+.social-link {
+  display: flex; align-items: center; gap: 10px;
+  min-height: var(--tap); padding: 0 12px;
+  border: 1px solid var(--border); background: var(--bg2);
+  color: var(--text); text-decoration: none;
+  font-family: var(--font-mono); font-size: 12px; letter-spacing: 1px;
+  margin-bottom: 6px; transition: border-color .15s, color .15s, transform .15s, background .15s;
+}
+.social-link:hover, .social-link:focus-visible {
+  border-color: var(--cyan); color: var(--cyan); background: rgba(0,229,204,.06); transform: translateX(3px);
+}
+.social-link svg { width: 18px; height: 18px; flex-shrink: 0; }
+
+/* ============================================================ CONTATORE === */
+.visit-counter { font-family: var(--font-mono); font-size: 10px; color: var(--text-dim); letter-spacing: 1px; margin-top: 14px; }
+.counter-display {
+  background: #000; border: 1px solid var(--green); color: var(--green);
+  font-family: var(--font-mono); font-size: 20px; letter-spacing: 4px;
+  padding: 6px 12px; margin-top: 4px; display: inline-block;
+  box-shadow: 0 0 10px rgba(0,255,65,.3); font-variant-numeric: tabular-nums;
+}
+
+/* ================================================================ STATUS == */
+.bio-genre {
+  font-family: var(--font-display); font-weight: bold; font-style: italic;
+  font-size: 30px; line-height: 1.05; color: var(--cyan); letter-spacing: 1px;
+  margin-bottom: 12px; overflow-wrap: break-word;
+}
+@media (min-width: 860px) { .bio-genre { font-size: 48px; letter-spacing: 2px; } }
+.bio-divider { width: 60px; height: 2px; background: var(--purple); margin-bottom: 14px; }
+.bio-text { line-height: 1.8; }
+.bio-text strong { color: var(--cyan); }
+
+/* ================================================================= BLOG === */
+.post-card { border: 1px solid var(--border); background: var(--bg2); padding: 12px; margin-bottom: 10px; }
+.post-card:hover { border-color: var(--purple-light); }
+.post-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; margin-bottom: 8px; }
+.post-date { font-family: var(--font-mono); font-size: 10px; color: var(--text-dim); letter-spacing: 1px; }
+.post-title { font-size: 15px; color: var(--cyan); letter-spacing: .5px; margin-bottom: 6px; }
+.post-content { color: var(--text-dim); line-height: 1.7; font-size: 14px; }
+.empty-state {
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: 2px;
+  color: var(--text-dim); text-align: center; padding: 22px; border: 1px solid var(--border);
+}
+
+/* ============================================================= ARCHIVIO === */
+.archive-intro { font-size: 13px; color: var(--text-dim); margin-bottom: 12px; }
+.archive-list { display: grid; gap: 8px; }
+.archive-item {
+  display: flex; align-items: center; gap: 10px;
+  border: 1px solid var(--border); background: var(--bg2); padding: 10px;
+}
+.archive-icon {
+  width: 38px; height: 38px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  border: 1px solid var(--purple); color: var(--cyan);
+  font-family: var(--font-mono); font-size: 9px; letter-spacing: .5px;
+}
+.archive-meta { flex: 1; min-width: 0; }
+.archive-title { font-size: 13px; color: var(--text); overflow-wrap: break-word; }
+.archive-sub { font-family: var(--font-mono); font-size: 10px; color: var(--text-dim); letter-spacing: .5px; margin-top: 2px; }
+.archive-dl {
+  flex-shrink: 0; min-height: var(--tap); min-width: var(--tap);
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  padding: 0 12px; border: 1px solid var(--green); color: var(--green);
+  background: rgba(0,255,65,.05); text-decoration: none;
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: 1px;
+}
+.archive-dl:hover { background: rgba(0,255,65,.15); }
+
+/* ================================================================ GIOCO === */
+.game-shell { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.game-canvas {
+  width: 100%; max-width: 360px; aspect-ratio: 1;
+  background: #000; border: 2px solid var(--green);
+  box-shadow: 0 0 14px rgba(0,255,65,.25); touch-action: none;
+  image-rendering: pixelated;
+}
+.game-hud {
+  display: flex; justify-content: space-between; width: 100%; max-width: 360px;
+  font-family: var(--font-mono); font-size: 11px; color: var(--green); letter-spacing: 1px;
+}
+.game-btn {
+  min-height: var(--tap); padding: 0 18px;
+  background: var(--purple); color: #fff; border: none;
+  font-family: var(--font-mono); font-size: 12px; letter-spacing: 1px; cursor: pointer;
+}
+.game-btn:hover { background: var(--purple-light); }
+.game-hint { font-family: var(--font-mono); font-size: 10px; color: var(--text-dim); letter-spacing: 1px; text-align: center; }
+.game-pad { display: grid; grid-template-columns: repeat(3, 56px); grid-template-rows: repeat(2, 56px); gap: 6px; justify-content: center; }
+.game-pad button {
+  background: var(--bg2); border: 1px solid var(--border); color: var(--cyan);
+  font-size: 18px; cursor: pointer;
+}
+.game-pad button:active { background: var(--purple); color: #fff; }
+@media (min-width: 860px) { .game-pad { display: none; } }
+.scoreboard { width: 100%; max-width: 360px; font-family: var(--font-mono); font-size: 11px; }
+.scoreboard li { display: flex; justify-content: space-between; gap: 10px; padding: 3px 0; border-bottom: 1px dotted var(--border); list-style: none; }
+.scoreboard .pos { color: var(--amber); }
+
+/* =============================================== BANNER ANNI '90 (88x31) == */
+.banner-strip { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; padding: 4px 0; }
+.banner88 {
+  width: 88px; height: 31px; flex-shrink: 0;
+  border: 1px solid #555; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; text-align: center;
+  font-family: var(--font-mono); font-size: 7px; line-height: 1.15; letter-spacing: .3px;
+  text-decoration: none; overflow: hidden; text-transform: uppercase;
+}
+.banner88 b { font-size: 8px; letter-spacing: .5px; }
+.banner88.b-cyan   { background: #001a18; color: var(--cyan);   border-color: var(--cyan); }
+.banner88.b-purple { background: #140a28; color: var(--purple-light); border-color: var(--purple); }
+.banner88.b-green  { background: #001a07; color: var(--green);  border-color: var(--green); }
+.banner88.b-amber  { background: #1a1000; color: var(--amber);  border-color: var(--amber); }
+.banner88.blink { animation: blink 1.1s steps(2, start) infinite; }
+@keyframes blink { to { visibility: hidden; } }
+
+.construction {
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  background: repeating-linear-gradient(45deg, #1a1000, #1a1000 10px, #241700 10px, #241700 20px);
+  border: 1px solid var(--amber); color: var(--amber);
+  font-family: var(--font-mono); font-size: 10px; letter-spacing: 1.5px;
+  padding: 8px; text-align: center;
+}
+
+/* =============================================================== FOOTER === */
+footer { border-top: 1px solid var(--border); padding: 24px 12px; text-align: center; margin-top: 20px; display: flex; flex-direction: column; gap: 12px; align-items: center; }
+.footer-name {
+  font-family: var(--font-display); font-weight: bold; font-style: italic;
+  font-size: 20px; color: var(--purple-light); letter-spacing: 3px;
+}
+@media (min-width: 860px) { .footer-name { font-size: 28px; letter-spacing: 4px; } }
+.footer-name .star { color: var(--cyan); }
+.footer-copy { font-family: var(--font-mono); font-size: 10px; color: var(--text-dim); letter-spacing: 2px; }
+.cursor-toggle {
+  background: none; border: 1px solid var(--border); color: var(--text-dim);
+  font-family: var(--font-mono); font-size: 10px; letter-spacing: 1px;
+  min-height: var(--tap); padding: 0 14px; cursor: pointer;
+}
+.cursor-toggle:hover { border-color: var(--cyan); color: var(--cyan); }
+
+/* ============================================================== MODALI ==== */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.85); z-index: 500; display: flex; align-items: center; justify-content: center; padding: 12px; }
+.modal-box { background: var(--panel); border: 1px solid var(--purple); width: 100%; max-width: 440px; max-height: 90vh; overflow-y: auto; }
+.modal-title { background: var(--purple); color: #fff; font-family: var(--font-mono); font-size: 12px; letter-spacing: 2px; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; }
+.modal-close { background: none; border: none; color: #fff; font-size: 18px; cursor: pointer; min-width: 34px; min-height: 34px; }
+.modal-body { padding: 16px; }
+
+/* =============================================================== FORM ===== */
+label.field { display: block; font-family: var(--font-mono); font-size: 10px; color: var(--text-dim); letter-spacing: 1px; margin: 12px 0 4px; }
+label.field:first-child { margin-top: 0; }
+/* Un selettore d'attributo non raggiunge un <input> senza type esplicito
+   (che vale comunque "text"): si esclude per differenza. */
+input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="submit"]):not([type="button"]),
+textarea, select {
+  width: 100%; background: var(--bg); border: 1px solid var(--border); color: var(--text);
+  font-family: var(--font-mono); font-size: 16px;   /* 16px: evita lo zoom automatico su iOS */
+  padding: 10px; outline: none; resize: vertical;
+}
+@media (min-width: 860px) {
+  input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="submit"]):not([type="button"]),
+textarea, select { font-size: 13px; }
+}
+
+/* Il selettore dei file non si può ridisegnare del tutto: almeno il
+   contorno resta coerente col resto. */
+input[type="file"] {
+  width: 100%; color: var(--text-dim);
+  font-family: var(--font-mono); font-size: 12px;
+  background: var(--bg); border: 1px dashed var(--border); padding: 10px;
+}
+input[type="file"]::file-selector-button {
+  background: var(--purple); color: #fff; border: 0;
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: 1px;
+  padding: 8px 14px; margin-right: 10px; cursor: pointer;
+}
+input:focus, textarea:focus, select:focus { border-color: var(--cyan); }
+textarea { min-height: 110px; line-height: 1.6; }
+.btn-primary, .btn-secondary, .btn-danger {
+  min-height: var(--tap); padding: 0 18px; cursor: pointer;
+  font-family: var(--font-mono); font-size: 12px; letter-spacing: 1px; border: 1px solid transparent;
+}
+.btn-primary { background: var(--purple); color: #fff; }
+.btn-primary:hover { background: var(--purple-light); }
+.btn-primary:disabled { opacity: .5; cursor: not-allowed; }
+.btn-secondary { background: none; color: var(--text-dim); border-color: var(--border); }
+.btn-secondary:hover { color: var(--text); border-color: var(--text-dim); }
+.btn-danger { background: none; color: var(--red); border-color: var(--red); }
+.btn-danger:hover { background: rgba(255,68,68,.12); }
+.form-actions { display: flex; gap: 8px; margin-top: 16px; flex-wrap: wrap; }
+.msg-error { color: var(--red); font-family: var(--font-mono); font-size: 11px; letter-spacing: .5px; margin-top: 8px; }
+.msg-ok { color: var(--green); font-family: var(--font-mono); font-size: 11px; letter-spacing: .5px; margin-top: 8px; }
+
+/* ========================================================= RIDUCI MOTO ==== */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+  html { scroll-behavior: auto; }
+  .ticker-track { animation: none; }
+  body::before { display: none; }
+}
+
+/* =========================================================== PANNELLO ===== */
+.admin-shell { max-width: 1000px; margin: 0 auto; padding: 0 10px 48px; }
+.admin-bar {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap;
+  border-bottom: 2px solid var(--purple); padding: 12px 0; margin-bottom: 12px;
+}
+.admin-bar .mono { font-family: var(--font-mono); font-size: 12px; color: var(--cyan); letter-spacing: 1px; }
+.admin-link { display: flex; align-items: center; text-decoration: none; }
+.admin-tabs { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 16px; }
+.admin-tab {
+  min-height: var(--tap); padding: 0 14px; cursor: pointer;
+  background: var(--bg2); border: 1px solid var(--border); color: var(--text-dim);
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: 1px;
+}
+.admin-tab:hover { color: var(--cyan); border-color: var(--cyan); }
+.admin-tab.active { background: var(--purple); border-color: var(--purple); color: #fff; }
+.admin-panel { background: var(--panel); border: 1px solid var(--border); padding: 16px; }
+.admin-h2 { font-size: 16px; color: var(--cyan); letter-spacing: 1px; margin-bottom: 12px; }
+.admin-h3 { font-size: 13px; color: var(--text); letter-spacing: 1px; margin-bottom: 8px; }
+.admin-hint { font-family: var(--font-mono); font-size: 10.5px; color: var(--text-dim); letter-spacing: .4px; margin-top: 6px; line-height: 1.5; }
+.admin-grid { display: grid; gap: 14px; grid-template-columns: 1fr; }
+@media (min-width: 760px) { .admin-grid { grid-template-columns: 1fr 1fr; } }
+.admin-card { border: 1px solid var(--border); background: var(--bg2); padding: 12px; }
+.admin-preview { width: 100%; max-height: 220px; object-fit: cover; border: 1px solid var(--purple); margin-bottom: 10px; }
+.admin-row {
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  border: 1px solid var(--border); background: var(--bg2); padding: 10px; margin-bottom: 8px;
+}
+.admin-row-form input[name="url"], .admin-row-form input[name="title"], .admin-row-form input[name="description"] { flex: 1; min-width: 160px; }
+.admin-check { display: flex; align-items: center; gap: 6px; font-family: var(--font-mono); font-size: 11px; color: var(--text-dim); margin: 12px 0; cursor: pointer; }
+.admin-check input { width: 18px; height: 18px; accent-color: var(--purple); }
+.admin-badge {
+  display: inline-block; background: var(--purple); color: #fff;
+  font-family: var(--font-mono); font-size: 9px; letter-spacing: 1px;
+  padding: 2px 6px; margin-left: 6px; text-transform: uppercase;
+}
