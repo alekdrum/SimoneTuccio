@@ -20,14 +20,34 @@ Dal pannello si cambiano: foto profilo e current mood, tutti i testi, le
 notizie scorrevoli, i link social (ordine compreso), gli articoli del diario
 e i file dell'archivio.
 
-## Avvio in locale
+## Installazione
+
+Due strade, stesso risultato: entrambe chiamano la stessa funzione
+(`lib/install.ts`), quindi non possono divergere.
+
+**Dal browser** — non serve installare nulla. Imposta `SETUP_TOKEN`,
+`ADMIN_USERNAME` e `ADMIN_PASSWORD` fra le variabili d'ambiente, poi apri:
+
+```
+https://<il-sito>/api/setup?token=<SETUP_TOKEN>
+```
+
+Crea tabelle, contenuti iniziali e utente admin. **A installazione finita
+rimuovi quelle tre variabili**: senza `SETUP_TOKEN` la rotta risponde 404
+come se non esistesse.
+
+**Da terminale** — se hai Node sul computer:
 
 ```bash
 npm install
 cp .env.example .env.local     # poi compila i valori
-npm run db:setup               # crea le tabelle e l'utente admin
+npm run db:setup
 npm run dev
 ```
+
+Entrambe si possono rilanciare: le tabelle usano `IF NOT EXISTS`, i
+contenuti già presenti non vengono sovrascritti, e la password dell'admin
+viene aggiornata (utile se la dimentichi).
 
 ## Variabili d'ambiente
 
@@ -36,15 +56,16 @@ npm run dev
 | `DATABASE_URL` | Database Postgres | Neon → Connection string (usa la **pooled**) |
 | `BLOB_READ_WRITE_TOKEN` | Caricamento file | Impostata da sola collegando uno Store Blob al progetto Vercel |
 | `SESSION_SECRET` | Firma dei cookie di sessione | `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"` |
-| `ADMIN_USERNAME` / `ADMIN_PASSWORD` | Solo per `npm run db:setup` | Le scegli tu (password di almeno 12 caratteri) |
+| `SETUP_TOKEN` | Abilita `/api/setup`. **Da togliere dopo l'installazione** | La scegli tu (almeno 16 caratteri) |
+| `ADMIN_USERNAME` / `ADMIN_PASSWORD` | Utente del pannello, letti solo in installazione | Le scegli tu (password di almeno 12 caratteri) |
 
 `NEON_FETCH_ENDPOINT` esiste solo per i test: in produzione va lasciata vuota.
 
 ## Test
 
 ```bash
-npm test          # 32 test: crittografia e database
-npm run test:e2e  # 34 test: applicazione vera guidata da un browser
+npm test          # 37 test: crittografia, database, installazione
+npm run test:e2e  # 40 test: applicazione vera guidata da un browser
 npm run test:all  # tutto, build compresa
 ```
 
@@ -52,7 +73,9 @@ I test girano su un **Postgres vero** (PGlite, Postgres compilato in
 WebAssembly) dietro un adattatore che parla il protocollo HTTP di Neon
 (`tests/neon-pglite-shim.mjs`). Non c'è nessun finto database: le query
 provate sono le stesse che girano in produzione. I test end-to-end avviano
-l'applicazione compilata e la pilotano con Chromium.
+l'applicazione compilata, **la installano da zero chiamando `/api/setup`**
+e poi la pilotano con Chromium — quindi la procedura di installazione
+descritta qui sopra è verificata a ogni esecuzione.
 
 ## Scelte tecniche, e perché
 
@@ -85,10 +108,10 @@ incrementi in parallelo contino esattamente venti.
 1. Collega il repository a un progetto Vercel.
 2. Nel progetto, **Storage** → aggiungi **Neon** e uno **Store Blob**:
    Vercel imposta da sola `DATABASE_URL` e `BLOB_READ_WRITE_TOKEN`.
-3. Imposta `SESSION_SECRET` fra le variabili d'ambiente.
-4. Esegui `npm run db:setup` una volta, in locale, puntando al database di
-   produzione: crea le tabelle, i contenuti iniziali e l'utente admin.
-5. Collega il dominio `www.simonetuccio.it` al progetto e aggiorna i DNS
+3. Imposta `SESSION_SECRET`, `SETUP_TOKEN`, `ADMIN_USERNAME`, `ADMIN_PASSWORD`.
+4. Apri `https://<il-sito>/api/setup?token=<SETUP_TOKEN>` una volta sola.
+5. Rimuovi `SETUP_TOKEN`, `ADMIN_USERNAME` e `ADMIN_PASSWORD`.
+6. Collega il dominio `www.simonetuccio.it` al progetto e aggiorna i DNS
    presso il registrar seguendo le istruzioni di Vercel.
 
 > **Attenzione all'ordine.** Finché i DNS puntano a GitHub Pages, il sito

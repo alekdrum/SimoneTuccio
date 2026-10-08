@@ -5,13 +5,9 @@
  */
 import { spawn } from 'node:child_process';
 import net from 'node:net';
-import { readFileSync } from 'node:fs';
-import { randomBytes, scrypt as _scrypt } from 'node:crypto';
-import { promisify } from 'node:util';
 import { chromium } from '/opt/node22/lib/node_modules/playwright/index.mjs';
 import { startShim } from './neon-pglite-shim.mjs';
 
-const scrypt = promisify(_scrypt);
 
 /** Porta libera scelta al volo: due esecuzioni non si pestano i piedi. */
 const PORT = await new Promise(resolve => {
@@ -30,41 +26,8 @@ const check = (name, ok, extra = '') => results.push([ok, name, extra]);
 
 /* ---------------------------------------------------------- preparazione --- */
 
-const shim = await startShim();
-const schema = readFileSync(new URL('../db/schema.sql', import.meta.url), 'utf8');
-for (const s of schema.split(/;\s*$/m).map(x => x.replace(/^\s*--.*$/gm, '').trim()).filter(Boolean)) {
-  await shim.db.exec(s);
-}
-
-const salt = randomBytes(16);
-const hash = `scrypt$${salt.toString('hex')}$${(await scrypt(ADMIN_PASS, salt, 64)).toString('hex')}`;
-await shim.db.query(`INSERT INTO admin_users (username, password_hash) VALUES ($1, $2)`, [ADMIN_USER, hash]);
-
-for (const [k, v] of Object.entries({
-  profile_name: 'SIMONE TUCCIO',
-  profile_bio: 'Bio iniziale di prova',
-  status_heading: 'Hai visto la TV?',
-  status_body: 'Riga uno.\n\n**Grassetto** e testo normale.',
-  ticker_items: '★ PRIMA NOTIZIA ▲\nSECONDA NOTIZIA ▲',
-  profile_image_url: '/assets/profile.jpg',
-  mood_image_url: '/assets/mood.jpg',
-  spotify_artist_id: '7dqy9RM6fw0vzbMf4FZUzC',
-  archive_intro: 'Materiale scaricabile liberamente.'
-})) await shim.db.query(`INSERT INTO settings (key, value) VALUES ($1, $2)`, [k, v]);
-
-for (const [p, l, u, pos] of [
-  ['soundcloud', 'SOUNDCLOUD', 'https://soundcloud.com/simonetuccio', 0],
-  ['spotify', 'SPOTIFY', 'https://open.spotify.com/artist/x', 1],
-  ['apple_music', 'APPLE MUSIC', 'https://music.apple.com/x', 2],
-  ['instagram', 'INSTAGRAM', 'https://www.instagram.com/simonetuccio/', 3],
-  ['tiktok', 'TIKTOK', 'https://www.tiktok.com/@simonetuccio', 4]
-]) await shim.db.query(`INSERT INTO socials (platform,label,url,position) VALUES ($1,$2,$3,$4)`, [p, l, u, pos]);
-
-await shim.db.query(
-  `INSERT INTO archive_items (title,description,kind,url,filename,size_bytes,content_type)
-   VALUES ($1,$2,$3,$4,$5,$6,$7)`,
-  ['Demo inedita', 'registrata in cameretta', 'audio',
-   'https://esempio.public.blob.vercel-storage.com/demo.mp3', 'demo.mp3', 4200000, 'audio/mpeg']);
+const SETUP_TOKEN = 'token-di-installazione-abbastanza-lungo';
+const shim = await startShim();   // database vuoto: lo riempirà /api/setup
 
 /* ----------------------------------------------------- avvio applicazione --- */
 
@@ -78,6 +41,9 @@ const server = spawn(process.execPath, [nextBin, 'start', '-p', String(PORT)], {
     DATABASE_URL: shim.connectionString,
     NEON_FETCH_ENDPOINT: shim.endpoint,
     SESSION_SECRET: 'z'.repeat(48),
+    SETUP_TOKEN,
+    ADMIN_USERNAME: ADMIN_USER,
+    ADMIN_PASSWORD: ADMIN_PASS,
     NODE_ENV: 'production'
   },
   stdio: ['ignore', 'pipe', 'pipe']
@@ -108,6 +74,42 @@ if (!await waitForServer()) {
   console.error('Il server non si è avviato.\n', serverLog.slice(-2500));
   await cleanup(1);
 }
+
+/* ------------------------------------------------- installazione dal web --- */
+// Il database è ancora vuoto: la home deve reggere lo stesso, con i
+// contenuti di riserva, invece di restituire un errore.
+{
+  const prima = await fetch(BASE);
+  check('database vuoto: la home risponde lo stesso', prima.ok, `stato ${prima.status}`);
+
+  const senzaToken = await fetch(`${BASE}/api/setup`);
+  check('installazione: senza token risponde 404', senzaToken.status === 404, `stato ${senzaToken.status}`);
+
+  const tokenSbagliato = await fetch(`${BASE}/api/setup?token=sbagliato-ma-lungo-uguale`);
+  check('installazione: token sbagliato risponde 404', tokenSbagliato.status === 404, `stato ${tokenSbagliato.status}`);
+
+  const esito = await fetch(`${BASE}/api/setup?token=${encodeURIComponent(SETUP_TOKEN)}`);
+  const corpo = await esito.json();
+  check('installazione: con il token giusto riesce', esito.ok && corpo.esito === 'installazione completata',
+    JSON.stringify(corpo).slice(0, 160));
+  check('installazione: crea l\'utente admin', corpo.admin === ADMIN_USER, String(corpo.admin));
+
+  const ancora = await fetch(`${BASE}/api/setup?token=${encodeURIComponent(SETUP_TOKEN)}`);
+  check('installazione: rilanciarla non dà errore', ancora.ok, `stato ${ancora.status}`);
+}
+
+/* ------------------------------------------- dati specifici per i test ----- */
+for (const [k, v] of Object.entries({
+  profile_bio: 'Bio iniziale di prova',
+  status_body: 'Riga uno.\n\n**Grassetto** e testo normale.',
+  ticker_items: '★ PRIMA NOTIZIA ▲\nSECONDA NOTIZIA ▲'
+})) await shim.db.query(`UPDATE settings SET value = $2 WHERE key = $1`, [k, v]);
+
+await shim.db.query(
+  `INSERT INTO archive_items (title,description,kind,url,filename,size_bytes,content_type)
+   VALUES ($1,$2,$3,$4,$5,$6,$7)`,
+  ['Demo inedita', 'registrata in cameretta', 'audio',
+   'https://esempio.public.blob.vercel-storage.com/demo.mp3', 'demo.mp3', 4200000, 'audio/mpeg']);
 
 /* ------------------------------------------------------------------ test --- */
 

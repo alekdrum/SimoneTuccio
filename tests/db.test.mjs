@@ -1,9 +1,8 @@
 import { test, describe, before, after } from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
 import { startShim } from './neon-pglite-shim.mjs';
 
-let shim, q, auth, crypto_;
+let shim, q, auth, crypto_, install_;
 
 before(async () => {
   shim = await startShim();
@@ -14,11 +13,11 @@ before(async () => {
   q = await import('../lib/queries.ts');
   auth = await import('../lib/login.ts');
   crypto_ = await import('../lib/crypto.ts');
+  install_ = await import('../lib/install.ts');
 
-  const schema = readFileSync(new URL('../db/schema.sql', import.meta.url), 'utf8');
-  for (const s of schema.split(/;\s*$/m).map(x => x.replace(/^\s*--.*$/gm, '').trim()).filter(Boolean)) {
-    await shim.db.exec(s);
-  }
+  // Si installa con la stessa funzione usata in produzione, non con una
+  // copia del DDL: se l'installazione si rompe, i test se ne accorgono.
+  await install_.install();
 });
 
 after(async () => { await shim.stop(); });
@@ -37,8 +36,47 @@ describe('schema', () => {
     assert.equal(await q.getVisits(), 0);
   });
 
+  test('le tabelle non sono duplicate da una seconda installazione', async () => {
+    await install_.install();
+    const res = await shim.db.query(
+      `SELECT count(*)::int AS c FROM information_schema.tables WHERE table_schema = 'public'`);
+    assert.equal(res.rows[0].c, 7);
+  });
+
   test('vieta una seconda riga nel contatore', async () => {
     await assert.rejects(() => shim.db.exec(`INSERT INTO visits (id, count) VALUES (2, 0)`));
+  });
+});
+
+describe('installazione', () => {
+  test('inserisce i contenuti e i social di partenza', async () => {
+    const settings = await q.getSettings();
+    assert.ok(settings.status_heading, 'manca status_heading');
+    const socials = await q.getSocials();
+    assert.equal(socials[0].platform, 'soundcloud', 'SoundCloud deve stare per primo');
+    assert.equal(socials.length, 5);
+  });
+
+  test('rilanciarla non duplica nulla e non sovrascrive le modifiche', async () => {
+    await q.setSetting('profile_bio', 'testo scelto da me');
+    await install_.install();
+    assert.equal((await q.getSettings()).profile_bio, 'testo scelto da me');
+    assert.equal((await q.getSocials()).length, 5);
+  });
+
+  test('crea l\'admin e ne aggiorna la password se rilanciata', async () => {
+    await install_.install('prova', 'password-iniziale-1');
+    assert.equal((await auth.login('prova', 'password-iniziale-1')).ok, true);
+    await install_.install('prova', 'password-cambiata-2');
+    assert.equal((await auth.login('prova', 'password-cambiata-2')).ok, true);
+    assert.equal((await auth.login('prova', 'password-iniziale-1')).ok, false);
+  });
+
+  test('il confronto del token rifiuta valori diversi', () => {
+    assert.equal(install_.tokenMatches('abc', 'abc'), true);
+    assert.equal(install_.tokenMatches('abc', 'abd'), false);
+    assert.equal(install_.tokenMatches('abc', 'abcd'), false);
+    assert.equal(install_.tokenMatches('', 'abc'), false);
   });
 });
 
