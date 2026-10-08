@@ -46,3 +46,42 @@ describe('normalizzazione degli indirizzi social', () => {
     assert.equal(normalizeUrl('file:///etc/passwd'), null);
   });
 });
+
+/* ------------------------------------------------------ player SoundCloud -- */
+
+const { soundcloudEmbedUrl } = await import('../lib/url.ts');
+
+describe('player SoundCloud', () => {
+  test('costruisce il lettore da un profilo', () => {
+    const src = soundcloudEmbedUrl('soundcloud.com/simonetuccio');
+    assert.ok(src.startsWith('https://w.soundcloud.com/player/?'));
+    assert.ok(decodeURIComponent(src).includes('https://soundcloud.com/simonetuccio'));
+  });
+
+  test('funziona anche con playlist e singoli brani', () => {
+    assert.ok(soundcloudEmbedUrl('https://soundcloud.com/simonetuccio/sets/hai-visto-la-tv'));
+    assert.ok(soundcloudEmbedUrl('https://soundcloud.com/simonetuccio/amen'));
+  });
+
+  test('non parte in automatico', () => {
+    assert.ok(soundcloudEmbedUrl('soundcloud.com/x').includes('auto_play=false'));
+  });
+
+  test('rifiuta domini che non sono SoundCloud', () => {
+    // il valore arriva dal pannello e finisce in un <iframe>:
+    // non deve poter incorporare un sito qualsiasi
+    for (const cattivo of [
+      'https://esempio.it/finto',
+      'https://soundcloud.com.malevolo.it/x',
+      'https://evil.com/?u=soundcloud.com',
+      'javascript:alert(1)',
+      ''
+    ]) {
+      assert.equal(soundcloudEmbedUrl(cattivo), null, `avrebbe dovuto rifiutare: "${cattivo}"`);
+    }
+  });
+
+  test('accetta i sottodomini legittimi', () => {
+    assert.ok(soundcloudEmbedUrl('https://on.soundcloud.com/abc123'));
+  });
+});

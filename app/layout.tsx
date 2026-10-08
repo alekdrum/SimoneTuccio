@@ -33,18 +33,9 @@ export const viewport: Viewport = {
   initialScale: 1
 };
 
-/* Applica la preferenza sul cursore prima del primo disegno, così non
-   si vede il cursore cambiare a pagina già carica. */
-const cursorBoot = `
-try {
-  if (localStorage.getItem('st_star_cursor') !== 'off') document.documentElement.dataset.starCursor = 'on';
-} catch (e) { document.documentElement.dataset.starCursor = 'on'; }
-`;
-
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="it">
-      <head><script dangerouslySetInnerHTML={{ __html: cursorBoot }} /></head>
       <body>{children}</body>
     </html>
   );

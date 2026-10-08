@@ -105,6 +105,16 @@ export const DEFAULT_SETTINGS: Record<string, string> = {
   mood_image_url:    '/assets/mood.jpg',
   spotify_artist_id: '7dqy9RM6fw0vzbMf4FZUzC',
   archive_intro:     'Materiale scaricabile liberamente: demo, foto, artwork.',
+  soundcloud_url:    '',
+  blinkies: [
+    'HAI VISTO LA TV?',
+    '★ AMEN ★ fuori ora',
+    'spegni le emozioni',
+    'il prossimo atto sta arrivando',
+    'cambia canale.',
+    'night person',
+    '100% hand coded ×××'
+  ].join('\n'),
   meta_description:  'Sito ufficiale di Simone Tuccio. «Hai visto la TV?» — i primi tre atti sono fuori: Inesorabilmente, Occhi, Amen.'
 };
 

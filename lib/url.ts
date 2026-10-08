@@ -28,3 +28,36 @@ export function normalizeUrl(raw: string): string | null {
 
   return parsed.toString();
 }
+
+/**
+ * Indirizzo del lettore incorporato di SoundCloud a partire dal link di un
+ * profilo, di una playlist o di un singolo brano.
+ *
+ * Si controlla che l'host sia davvero SoundCloud: il valore arriva dal
+ * pannello e finisce dentro un <iframe>, quindi non va preso per buono.
+ * Restituisce null se non è un link SoundCloud.
+ */
+export function soundcloudEmbedUrl(raw: string): string | null {
+  const normalizzato = normalizeUrl(raw);
+  if (!normalizzato) return null;
+
+  const host = new URL(normalizzato).hostname.toLowerCase();
+  const ammesso = host === 'soundcloud.com'
+    || host === 'www.soundcloud.com'
+    || host === 'on.soundcloud.com'
+    || host.endsWith('.soundcloud.com');
+  if (!ammesso) return null;
+
+  const params = new URLSearchParams({
+    url: normalizzato,
+    color: '#7c3aed',
+    auto_play: 'false',
+    hide_related: 'true',
+    show_comments: 'false',
+    show_user: 'true',
+    show_reposts: 'false',
+    show_teaser: 'false',
+    visual: 'true'
+  });
+  return `https://w.soundcloud.com/player/?${params.toString()}`;
+}

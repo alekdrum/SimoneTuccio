@@ -3,12 +3,12 @@ import Ticker from '@/components/Ticker';
 import Window from '@/components/Window';
 import SocialIcon from '@/components/SocialIcon';
 import VisitCounter from '@/components/VisitCounter';
-import CursorToggle from '@/components/CursorToggle';
 import Snake from '@/components/Snake';
 import Archive from '@/components/Archive';
 import RichText from '@/components/RichText';
-import { BannerStrip, UnderConstruction } from '@/components/Banners';
+import { Blinkies, UnderConstruction } from '@/components/Banners';
 import { getSettings, getPosts, getSocials, getArchive, getVisits } from '@/lib/queries';
+import { soundcloudEmbedUrl } from '@/lib/url';
 import type { Post, Social, ArchiveItem, Settings } from '@/lib/types';
 
 // I contenuti cambiano dal pannello admin: la pagina si rigenera a ogni richiesta.
@@ -53,7 +53,10 @@ function formatDate(iso: string) {
 
 export default async function Home() {
   const { settings, posts, socials, archive, visits, offline } = await loadPage();
-  const tickerItems = (settings.ticker_items ?? '').split('\n').map(s => s.trim()).filter(Boolean);
+  const righe = (valore: string) => (valore ?? '').split('\n').map(r => r.trim()).filter(Boolean);
+  const tickerItems = righe(settings.ticker_items);
+  const blinkies = righe(settings.blinkies);
+  const soundcloud = soundcloudEmbedUrl(settings.soundcloud_url ?? '');
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -108,7 +111,7 @@ export default async function Home() {
             <VisitCounter initial={visits} />
           </Window>
 
-          <BannerStrip />
+          <Blinkies frasi={blinkies} />
         </aside>
 
         <main className="main-col">
@@ -118,7 +121,19 @@ export default async function Home() {
             <div className="bio-text"><RichText text={settings.status_body} /></div>
           </Window>
 
-          <Window title="★ PLAYER SPOTIFY ★" id="musica">
+          {soundcloud && (
+            <Window title="★ PLAYER SOUNDCLOUD ★" id="musica">
+              <iframe
+                title="Player SoundCloud — brani di Simone Tuccio"
+                src={soundcloud}
+                width="100%" height={300} frameBorder={0} loading="lazy"
+                allow="autoplay"
+                style={{ display: 'block', border: 0 }}
+              />
+            </Window>
+          )}
+
+          <Window title="★ PLAYER SPOTIFY ★" id={soundcloud ? 'spotify' : 'musica'}>
             <iframe
               title="Player Spotify — discografia di Simone Tuccio"
               src={`https://open.spotify.com/embed/artist/${settings.spotify_artist_id}?utm_source=generator&theme=0`}
@@ -153,10 +168,9 @@ export default async function Home() {
       </div>
 
       <footer>
-        <BannerStrip />
+        <Blinkies frasi={blinkies} />
         <div className="footer-name"><span className="star">★</span> SIMONE TUCCIO <span className="star">★</span></div>
         <div className="footer-copy">© {new Date().getFullYear()} × SIMONE TUCCIO ×</div>
-        <CursorToggle />
       </footer>
     </>
   );

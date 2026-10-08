@@ -110,7 +110,8 @@ if (!await waitForServer()) {
 for (const [k, v] of Object.entries({
   profile_bio: 'Bio iniziale di prova',
   status_body: 'Riga uno.\n\n**Grassetto** e testo normale.',
-  ticker_items: '★ PRIMA NOTIZIA ▲\nSECONDA NOTIZIA ▲'
+  ticker_items: '★ PRIMA NOTIZIA ▲\nSECONDA NOTIZIA ▲',
+  soundcloud_url: 'soundcloud.com/simonetuccio'
 })) await shim.db.query(`UPDATE settings SET value = $2 WHERE key = $1`, [k, v]);
 
 await shim.db.query(
@@ -188,11 +189,30 @@ try {
     check('gioco: il serpente si muove', !snap1.equals(snap2));
 
     // ---------- cursore a stella
-    check('cursore: attivo di partenza',
-      await page.evaluate(() => document.documentElement.dataset.starCursor === 'on'));
-    await page.locator('.cursor-toggle').click();
-    check('cursore: si può spegnere',
-      await page.evaluate(() => document.documentElement.dataset.starCursor !== 'on'));
+    const cursore = await page.evaluate(() => getComputedStyle(document.body).cursor);
+    check('cursore: è la stella disegnata, non quello di sistema',
+      cursore.includes('url(') && cursore.includes('svg'), cursore.slice(0, 60));
+    check('cursore: non c\'è più nessun interruttore',
+      (await page.locator('.cursor-toggle').count()) === 0);
+
+    // ---------- blinkies
+    const blinkies = await page.locator('.blinkie').allTextContents();
+    check('blinkies: compaiono le targhette', blinkies.length >= 7, `trovate ${blinkies.length}`);
+    check('blinkies: il testo arriva dal database',
+      blinkies.includes('HAI VISTO LA TV?'), blinkies.slice(0, 3).join(' / '));
+    check('blinkies: niente più badge 88x31',
+      (await page.locator('.banner88').count()) === 0);
+    const bordo = await page.locator('.blinkie').first().evaluate(el => getComputedStyle(el).animationName);
+    check('blinkies: il bordo tratteggiato è animato', bordo === 'blinkie-march', bordo);
+
+    // ---------- player SoundCloud
+    const sc = page.locator('iframe[title*="SoundCloud"]');
+    check('player: SoundCloud presente quando configurato', (await sc.count()) === 1);
+    const scSrc = await sc.getAttribute('src');
+    check('player: SoundCloud punta al lettore ufficiale',
+      scSrc?.startsWith('https://w.soundcloud.com/player/'), String(scSrc).slice(0, 50));
+    check('player: Spotify resta presente',
+      (await page.locator('iframe[title*="Spotify"]').count()) === 1);
 
     await ctx.close();
   }

@@ -88,8 +88,16 @@ function ContentTab({ settings }: { settings: Settings }) {
       <label className="field" htmlFor="archive_intro">INTRODUZIONE DELL&apos;ARCHIVIO</label>
       <input id="archive_intro" name="archive_intro" defaultValue={settings.archive_intro ?? ''} />
 
+      <label className="field" htmlFor="blinkies">BLINKIES — una frase per riga, i colori si alternano da soli</label>
+      <textarea id="blinkies" name="blinkies" rows={7} defaultValue={settings.blinkies ?? ''} />
+
       <label className="field" htmlFor="spotify_artist_id">ID ARTISTA SPOTIFY</label>
       <input id="spotify_artist_id" name="spotify_artist_id" defaultValue={settings.spotify_artist_id ?? ''} />
+
+      <label className="field" htmlFor="soundcloud_url">PLAYER SOUNDCLOUD — profilo, playlist o singolo brano</label>
+      <input id="soundcloud_url" name="soundcloud_url" defaultValue={settings.soundcloud_url ?? ''}
+             placeholder="soundcloud.com/simonetuccio" />
+      <p className="admin-hint">Lascialo vuoto per non mostrare il player SoundCloud.</p>
 
       <label className="field" htmlFor="meta_description">DESCRIZIONE PER GOOGLE E ANTEPRIME LINK</label>
       <textarea id="meta_description" name="meta_description" rows={3} defaultValue={settings.meta_description ?? ''} />

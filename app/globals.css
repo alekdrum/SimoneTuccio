@@ -45,15 +45,14 @@ body {
 }
 
 /* --- CURSORE A STELLA ----------------------------------------------------
-   Disattivabile: il body perde .star-cursor e torna il cursore di sistema.
-   Un cursore personalizzato imposto a forza è un fastidio, quindi è una
-   scelta, non un obbligo. Sui dispositivi touch non si applica mai. */
+   Si applica solo dove c'è un puntatore preciso: sui dispositivi touch
+   non ha senso e viene ignorato. */
 @media (hover: hover) and (pointer: fine) {
-  html[data-star-cursor="on"] body,
-  html[data-star-cursor="on"] body * {
+  body,
+  body * {
     cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'%3E%3Cpath d='M14 2l3.3 8.1 8.7.6-6.7 5.6 2.1 8.5L14 20.2 6.6 24.8l2.1-8.5L2 10.7l8.7-.6z' fill='%2300e5cc' stroke='%23111118' stroke-width='1.4'/%3E%3C/svg%3E") 14 14, auto;
   }
-  html[data-star-cursor="on"] body :is(a, button, [role="button"], summary, label, input, textarea, select) {
+  body :is(a, button, [role="button"], summary, label, input, textarea, select) {
     cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'%3E%3Cpath d='M14 2l3.3 8.1 8.7.6-6.7 5.6 2.1 8.5L14 20.2 6.6 24.8l2.1-8.5L2 10.7l8.7-.6z' fill='%23ff9900' stroke='%23111118' stroke-width='1.4'/%3E%3C/svg%3E") 14 14, pointer;
   }
 }
@@ -305,22 +304,49 @@ nav.site-nav {
 .scoreboard li { display: flex; justify-content: space-between; gap: 10px; padding: 3px 0; border-bottom: 1px dotted var(--border); list-style: none; }
 .scoreboard .pos { color: var(--amber); }
 
-/* =============================================== BANNER ANNI '90 (88x31) == */
-.banner-strip { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; padding: 4px 0; }
-.banner88 {
-  width: 88px; height: 31px; flex-shrink: 0;
-  border: 1px solid #555; display: flex; flex-direction: column;
-  align-items: center; justify-content: center; text-align: center;
-  font-family: var(--font-mono); font-size: 7px; line-height: 1.15; letter-spacing: .3px;
-  text-decoration: none; overflow: hidden; text-transform: uppercase;
+/* ================================================== BLINKIES (anni 2000) == */
+/* Le targhette animate da MySpace/Xanga: bordo tratteggiato che scorre
+   attorno a una frase. Fatte in CSS, non come GIF: restano nitide a
+   qualsiasi zoom, si leggono con i lettori di schermo e si cambiano dal
+   pannello senza aprire un editor di immagini. */
+.blinkie-strip {
+  display: flex; flex-wrap: wrap; gap: 6px;
+  justify-content: center; padding: 4px 0;
 }
-.banner88 b { font-size: 8px; letter-spacing: .5px; }
-.banner88.b-cyan   { background: #001a18; color: var(--cyan);   border-color: var(--cyan); }
-.banner88.b-purple { background: #140a28; color: var(--purple-light); border-color: var(--purple); }
-.banner88.b-green  { background: #001a07; color: var(--green);  border-color: var(--green); }
-.banner88.b-amber  { background: #1a1000; color: var(--amber);  border-color: var(--amber); }
-.banner88.blink { animation: blink 1.1s steps(2, start) infinite; }
-@keyframes blink { to { visibility: hidden; } }
+.blinkie {
+  --dash-a: #ffffff;
+  --dash-b: #000000;
+  min-width: 150px; height: 22px;
+  padding: 0 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display);
+  font-size: 10px; font-weight: 700; letter-spacing: .2px; line-height: 1;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  text-decoration: none;
+
+  /* quattro strisce tratteggiate, una per lato */
+  background-image:
+    repeating-linear-gradient(90deg, var(--dash-a) 0 4px, var(--dash-b) 4px 8px),
+    repeating-linear-gradient(90deg, var(--dash-a) 0 4px, var(--dash-b) 4px 8px),
+    repeating-linear-gradient(0deg,  var(--dash-a) 0 4px, var(--dash-b) 4px 8px),
+    repeating-linear-gradient(0deg,  var(--dash-a) 0 4px, var(--dash-b) 4px 8px);
+  background-size: 100% 2px, 100% 2px, 2px 100%, 2px 100%;
+  background-position: 0 0, 0 100%, 0 0, 100% 0;
+  background-repeat: repeat-x, repeat-x, repeat-y, repeat-y;
+  animation: blinkie-march .5s linear infinite;
+}
+/* I tratteggi girano attorno al riquadro: sopra verso destra, sotto verso
+   sinistra, e lo stesso in verticale. */
+@keyframes blinkie-march {
+  to { background-position: 8px 0, -8px 100%, 0 -8px, 100% 8px; }
+}
+
+.blinkie.bk-purple { background-color: #4c1d95; color: #ede9fe; }
+.blinkie.bk-black  { background-color: #0a0a0f; color: #ffffff; }
+.blinkie.bk-white  { background-color: #e6e6ea; color: #111118; --dash-a: #000000; --dash-b: #ffffff; }
+.blinkie.bk-grey   { background-color: #6b6b7b; color: #ffffff; }
+.blinkie.bk-cyan   { background-color: #00231f; color: var(--cyan); --dash-a: var(--cyan); --dash-b: #000000; }
+.blinkie.bk-green  { background-color: #001a07; color: var(--green); --dash-a: var(--green); --dash-b: #000000; }
 
 .construction {
   display: flex; align-items: center; justify-content: center; gap: 10px;
@@ -339,12 +365,6 @@ footer { border-top: 1px solid var(--border); padding: 24px 12px; text-align: ce
 @media (min-width: 860px) { .footer-name { font-size: 28px; letter-spacing: 4px; } }
 .footer-name .star { color: var(--cyan); }
 .footer-copy { font-family: var(--font-mono); font-size: 10px; color: var(--text-dim); letter-spacing: 2px; }
-.cursor-toggle {
-  background: none; border: 1px solid var(--border); color: var(--text-dim);
-  font-family: var(--font-mono); font-size: 10px; letter-spacing: 1px;
-  min-height: var(--tap); padding: 0 14px; cursor: pointer;
-}
-.cursor-toggle:hover { border-color: var(--cyan); color: var(--cyan); }
 
 /* ============================================================== MODALI ==== */
 .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.85); z-index: 500; display: flex; align-items: center; justify-content: center; padding: 12px; }

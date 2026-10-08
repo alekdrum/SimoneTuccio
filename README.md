@@ -17,8 +17,14 @@ pannello di amministrazione per gestire i contenuti senza toccare il codice.
 | Gioco | `/#gioco` | Snake con classifica condivisa |
 
 Dal pannello si cambiano: foto profilo e current mood, tutti i testi, le
-notizie scorrevoli, i link social (ordine compreso), gli articoli del diario
-e i file dell'archivio.
+notizie scorrevoli, le **blinkies**, i link social (ordine compreso), il
+player SoundCloud, gli articoli del diario e i file dell'archivio.
+
+Le blinkies sono le targhette animate dei siti dei primi anni 2000, col
+bordo tratteggiato che gira. Sono fatte in CSS e non come GIF: restano
+nitide a qualsiasi ingrandimento, si leggono con i lettori di schermo e si
+riscrivono dal pannello senza aprire un editor di immagini. Una frase per
+riga; i colori si alternano da soli.
 
 ## Installazione
 
@@ -92,8 +98,8 @@ loro contenuto.
 ## Test
 
 ```bash
-npm test          # 56 test: crittografia, indirizzi, database, installazione, variabili
-npm run test:e2e  # 47 test: applicazione vera guidata da un browser
+npm test          # 61 test: crittografia, indirizzi, database, installazione, variabili
+npm run test:e2e  # 54 test: applicazione vera guidata da un browser
 npm run test:all  # tutto, build compresa
 ```
 
