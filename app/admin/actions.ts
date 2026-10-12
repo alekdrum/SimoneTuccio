@@ -60,7 +60,7 @@ export async function logoutAction() {
 
 const TEXT_SETTINGS = [
   'profile_name', 'profile_bio', 'status_heading', 'status_body',
-  'ticker_items', 'spotify_artist_id', 'soundcloud_url', 'archive_intro',
+  'ticker_items', 'spotify_artist_id', 'soundcloud_url', 'youtube_url', 'archive_intro',
   'meta_description', 'blinkies', 'profile_image_url', 'mood_image_url'
 ] as const;
 

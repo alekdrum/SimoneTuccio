@@ -110,7 +110,8 @@ if (!await waitForServer()) {
 for (const [k, v] of Object.entries({
   profile_bio: 'Bio iniziale di prova',
   status_body: 'Riga uno.\n\n**Grassetto** e testo normale.',
-  ticker_items: '★ PRIMA NOTIZIA ▲\nSECONDA NOTIZIA ▲'
+  ticker_items: '★ PRIMA NOTIZIA ▲\nASCOLTA SU soundcloud.com/simonetuccio ▲\nPIÙ INFO: https://esempio.it/tour.',
+  youtube_url: 'https://youtu.be/dQw4w9WgXcQ'
 })) await shim.db.query(`UPDATE settings SET value = $2 WHERE key = $1`, [k, v]);
 
 // Si riproduce il caso reale: database installato prima che queste due
@@ -208,6 +209,27 @@ try {
     const bordo = await page.locator('.blinkie').first().evaluate(el => getComputedStyle(el).animationName);
     check('blinkies: il bordo tratteggiato è animato', bordo === 'blinkie-march', bordo);
 
+    // ---------- indirizzi cliccabili nelle notizie
+    const linkNotizie = page.locator('.ticker-track a');
+    const href = await linkNotizie.first().getAttribute('href');
+    check('notizie: un indirizzo senza https:// diventa un link',
+      href === 'https://soundcloud.com/simonetuccio', String(href));
+    const hrefs = await linkNotizie.evaluateAll(a => a.map(x => x.getAttribute('href')));
+    check('notizie: il punto finale resta fuori dal link',
+      hrefs.includes('https://esempio.it/tour'), hrefs.join(' | '));
+    check('notizie: i link si aprono in una scheda nuova e protetta',
+      await linkNotizie.first().getAttribute('target') === '_blank' &&
+      (await linkNotizie.first().getAttribute('rel') || '').includes('noopener'));
+    check('notizie: il testo senza indirizzi resta testo',
+      (await page.locator('.ticker-track span').first().textContent()).includes('PRIMA NOTIZIA'));
+
+    // ---------- video YouTube
+    const yt = page.locator('iframe[title*="YouTube"]');
+    check('video: il riquadro compare quando configurato', (await yt.count()) === 1);
+    const ytSrc = await yt.getAttribute('src');
+    check('video: usa il dominio senza cookie di tracciamento',
+      ytSrc?.startsWith('https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ'), String(ytSrc).slice(0, 60));
+
     // ---------- player SoundCloud
     const sc = page.locator('iframe[title*="SoundCloud"]');
     check('player: SoundCloud compare anche senza campo dedicato, dal link social',
@@ -242,6 +264,26 @@ try {
       report.scrollWidth <= report.viewport, `${report.scrollWidth} > ${report.viewport}`);
     check('mobile: tutti i comandi grandi almeno 44px',
       report.small.length === 0, report.small.slice(0, 6).join(' | '));
+
+    // L'ordine chiesto: prima le notizie, poi i player, i social in fondo
+    const y = await page.evaluate(() => {
+      const top = (sel) => {
+        const el = document.querySelector(sel);
+        return el ? Math.round(el.getBoundingClientRect().top + scrollY) : null;
+      };
+      return {
+        profilo: top('.w-profilo'),
+        status: top('.w-status'),
+        player: top('.w-player'),
+        connettiti: top('.w-connettiti')
+      };
+    });
+    check('mobile: le notizie vengono prima dei player',
+      y.status !== null && y.player !== null && y.status < y.player, JSON.stringify(y));
+    check('mobile: i social stanno in fondo, dopo i player',
+      y.connettiti > y.player, JSON.stringify(y));
+    check('mobile: il profilo resta in cima',
+      y.profilo < y.status, JSON.stringify(y));
     await ctx.close();
   }
 

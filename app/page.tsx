@@ -8,7 +8,7 @@ import Archive from '@/components/Archive';
 import RichText from '@/components/RichText';
 import { Blinkies, UnderConstruction } from '@/components/Banners';
 import { getSettings, getPosts, getSocials, getArchive, getVisits } from '@/lib/queries';
-import { soundcloudEmbedUrl } from '@/lib/url';
+import { soundcloudEmbedUrl, youtubeEmbedUrl } from '@/lib/url';
 import type { Post, Social, ArchiveItem, Settings } from '@/lib/types';
 
 // I contenuti cambiano dal pannello admin: la pagina si rigenera a ogni richiesta.
@@ -61,6 +61,7 @@ export default async function Home() {
   const soundcloud = soundcloudEmbedUrl(
     settings.soundcloud_url || socials.find(s => s.platform === 'soundcloud')?.url || ''
   );
+  const youtube = youtubeEmbedUrl(settings.youtube_url ?? '');
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -82,6 +83,7 @@ export default async function Home() {
         <div className="nav-logo"><span className="star">★</span> SIMONE TUCCIO <span className="star">★</span></div>
         <div className="nav-links">
           <a href="#musica">MUSICA</a>
+          {youtube && <a href="#video">VIDEO</a>}
           <a href="#archivio">ARCHIVIO</a>
           <a href="#gioco">GIOCO</a>
           <a href="#diario">DIARIO</a>
@@ -90,7 +92,7 @@ export default async function Home() {
 
       <div className="page-wrap">
         <aside className="sidebar">
-          <Window title="★ PROFILO UTENTE ★">
+          <Window title="★ PROFILO UTENTE ★" className="w-profilo">
             <div className="profile-img-wrap">
               <Image src={settings.profile_image_url} alt={`Ritratto di ${settings.profile_name}`}
                      width={600} height={600} priority
@@ -105,7 +107,7 @@ export default async function Home() {
             </div>
           </Window>
 
-          <Window title="▲ CONNETTITI ▲">
+          <Window title="▲ CONNETTITI ▲" className="w-connettiti">
             {socials.map(s => (
               <a key={s.id} className="social-link" href={s.url} target="_blank" rel="me noopener noreferrer">
                 <SocialIcon platform={s.platform} />
@@ -115,18 +117,32 @@ export default async function Home() {
             <VisitCounter initial={visits} />
           </Window>
 
-          <Blinkies frasi={blinkies} />
+          <div className="w-blinkies"><Blinkies frasi={blinkies} /></div>
         </aside>
 
         <main className="main-col">
-          <Window title="▲ STATUS ▲">
+          <Window title="▲ STATUS ▲" className="w-status">
             <h2 className="bio-genre">{settings.status_heading}</h2>
             <div className="bio-divider" />
             <div className="bio-text"><RichText text={settings.status_body} /></div>
           </Window>
 
+          {youtube && (
+            <Window title="▶ VIDEO ▶" id="video" className="w-player">
+              <div className="video-wrap">
+                <iframe
+                  title="Video YouTube di Simone Tuccio"
+                  src={youtube}
+                  frameBorder={0} loading="lazy"
+                  allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowFullScreen
+                />
+              </div>
+            </Window>
+          )}
+
           {soundcloud && (
-            <Window title="★ PLAYER SOUNDCLOUD ★" id="musica">
+            <Window title="★ PLAYER SOUNDCLOUD ★" id="musica" className="w-player">
               <iframe
                 title="Player SoundCloud — brani di Simone Tuccio"
                 src={soundcloud}
@@ -137,7 +153,7 @@ export default async function Home() {
             </Window>
           )}
 
-          <Window title="★ PLAYER SPOTIFY ★" id={soundcloud ? 'spotify' : 'musica'}>
+          <Window title="★ PLAYER SPOTIFY ★" id={soundcloud ? 'spotify' : 'musica'} className="w-player">
             <iframe
               title="Player Spotify — discografia di Simone Tuccio"
               src={`https://open.spotify.com/embed/artist/${settings.spotify_artist_id}?utm_source=generator&theme=0`}
@@ -147,15 +163,15 @@ export default async function Home() {
             />
           </Window>
 
-          <Window title="▼ ARCHIVIO // DOWNLOAD ▼" id="archivio">
+          <Window title="▼ ARCHIVIO // DOWNLOAD ▼" id="archivio" className="w-dopo">
             <Archive items={archive} intro={settings.archive_intro} />
           </Window>
 
-          <Window title="☢ SNAKE ☢ — IL GIOCO" id="gioco">
+          <Window title="☢ SNAKE ☢ — IL GIOCO" id="gioco" className="w-dopo">
             <Snake />
           </Window>
 
-          <Window title="★ DIARIO // BLOG ★" id="diario">
+          <Window title="★ DIARIO // BLOG ★" id="diario" className="w-dopo">
             {offline && <UnderConstruction text="DIARIO TEMPORANEAMENTE NON RAGGIUNGIBILE" />}
             {!offline && posts.length === 0 && <div className="empty-state">NESSUN POST NEL DIARIO ×</div>}
             {posts.map(post => (

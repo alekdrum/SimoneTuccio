@@ -99,6 +99,14 @@ function ContentTab({ settings }: { settings: Settings }) {
              placeholder="soundcloud.com/simonetuccio" />
       <p className="admin-hint">Lascialo vuoto per non mostrare il player SoundCloud.</p>
 
+      <label className="field" htmlFor="youtube_url">VIDEO YOUTUBE — link del video, dello short o della playlist</label>
+      <input id="youtube_url" name="youtube_url" defaultValue={settings.youtube_url ?? ''}
+             placeholder="youtube.com/watch?v=..." />
+      <p className="admin-hint">
+        Lascialo vuoto per non mostrare il riquadro video. Funzionano anche i
+        link brevi youtu.be e gli Shorts.
+      </p>
+
       <label className="field" htmlFor="meta_description">DESCRIZIONE PER GOOGLE E ANTEPRIME LINK</label>
       <textarea id="meta_description" name="meta_description" rows={3} defaultValue={settings.meta_description ?? ''} />
 

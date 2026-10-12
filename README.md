@@ -18,7 +18,11 @@ pannello di amministrazione per gestire i contenuti senza toccare il codice.
 
 Dal pannello si cambiano: foto profilo e current mood, tutti i testi, le
 notizie scorrevoli, le **blinkies**, i link social (ordine compreso), il
-player SoundCloud, gli articoli del diario e i file dell'archivio.
+player SoundCloud, il video YouTube, gli articoli del diario e i file
+dell'archivio.
+
+Gli indirizzi scritti nelle notizie, nello status e negli articoli
+diventano cliccabili da soli: basta digitarli, anche senza «https://».
 
 Le blinkies sono le targhette animate dei siti dei primi anni 2000, col
 bordo tratteggiato che gira. Sono fatte in CSS e non come GIF: restano
@@ -98,8 +102,8 @@ loro contenuto.
 ## Test
 
 ```bash
-npm test          # 64 test: crittografia, indirizzi, database, installazione, variabili
-npm run test:e2e  # 54 test: applicazione vera guidata da un browser
+npm test          # 79 test: crittografia, indirizzi, database, installazione, variabili
+npm run test:e2e  # 63 test: applicazione vera guidata da un browser
 npm run test:all  # tutto, build compresa
 ```
 

@@ -8,15 +8,15 @@ import { useState, type ReactNode } from 'react';
  * così nessun contenuto resta chiuso per sbaglio.
  */
 export default function Window({
-  title, children, id, actions, defaultCollapsed = false
+  title, children, id, className, actions, defaultCollapsed = false
 }: {
-  title: string; children: ReactNode; id?: string;
+  title: string; children: ReactNode; id?: string; className?: string;
   actions?: ReactNode; defaultCollapsed?: boolean;
 }) {
   const [collapsed, setCollapsed] = useState(defaultCollapsed);
 
   return (
-    <section className={`window${collapsed ? ' collapsed' : ''}`} id={id}>
+    <section className={`window${collapsed ? ' collapsed' : ''}${className ? ' ' + className : ''}`} id={id}>
       <div
         className="window-title"
         onClick={() => setCollapsed(false)}

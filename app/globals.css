@@ -466,3 +466,50 @@ textarea { min-height: 110px; line-height: 1.6; }
   font-family: var(--font-mono); font-size: 9px; letter-spacing: 1px;
   padding: 2px 6px; margin-left: 6px; text-transform: uppercase;
 }
+
+/* ==================================== LINK DENTRO LE NOTIZIE E I TESTI == */
+.ticker-track a { color: var(--cyan); text-decoration: underline; text-underline-offset: 2px; }
+.ticker-track a:hover { color: var(--amber); }
+.bio-text a, .post-content a { color: var(--cyan); text-underline-offset: 2px; }
+.bio-text a:hover, .post-content a:hover { color: var(--amber); }
+
+/* Un link che scorre è impossibile da cliccare: al passaggio del mouse
+   (o quando si arriva col tasto Tab) la striscia si ferma. */
+.ticker-wrap:hover .ticker-track,
+.ticker-wrap:focus-within .ticker-track { animation-play-state: paused; }
+
+/* ============================================================== VIDEO === */
+/* Il riquadro tiene le proporzioni 16:9 a qualsiasi larghezza, così su
+   telefono il video non viene né tagliato né schiacciato. */
+.video-wrap { position: relative; width: 100%; aspect-ratio: 16 / 9; background: #000; }
+.video-wrap iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; display: block; }
+
+/* ============================================= ORDINE SU TELEFONO ======= */
+/* Su schermo stretto le due colonne non esistono più, e l'ordine giusto
+   non è quello del codice: prima le notizie, poi i player, e i social in
+   fondo. "display: contents" scioglie i due contenitori così che tutte le
+   finestre diventino elementi della stessa colonna e si possano ordinare. */
+@media (max-width: 859px) {
+  .page-wrap > .sidebar,
+  .page-wrap > .main-col { display: contents; }
+
+  .page-wrap > .sidebar > *,
+  .page-wrap > .main-col > * { min-width: 0; }
+
+  .w-profilo    { order: 1; }
+  .w-status     { order: 2; }   /* le notizie */
+  .w-player     { order: 3; }   /* video, SoundCloud, Spotify */
+  .w-dopo       { order: 4; }   /* archivio, gioco, diario */
+  .w-connettiti { order: 5; }   /* i social, in fondo */
+  .w-blinkies   { order: 6; }
+}
+
+/* Su telefono non esiste il passaggio del mouse, quindi la striscia non si
+   può fermare: l'unica difesa è un'area toccabile alta abbastanza. Si
+   alza solo quando ci sono davvero dei link dentro. */
+@media (max-width: 859px) {
+  .ticker-wrap.has-links { height: var(--tap); }
+  .ticker-wrap.has-links .ticker-track a {
+    display: inline-flex; align-items: center; min-height: var(--tap);
+  }
+}

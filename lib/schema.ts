@@ -106,6 +106,7 @@ export const DEFAULT_SETTINGS: Record<string, string> = {
   spotify_artist_id: '7dqy9RM6fw0vzbMf4FZUzC',
   archive_intro:     'Materiale scaricabile liberamente: demo, foto, artwork.',
   soundcloud_url:    '',
+  youtube_url:       '',
   blinkies: [
     'HAI VISTO LA TV?',
     '★ AMEN ★ fuori ora',
