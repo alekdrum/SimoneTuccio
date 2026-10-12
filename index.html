@@ -264,6 +264,16 @@
     .post-delete:hover { color: #ff4444; }
     .post-title { font-size: 13px; color: var(--cyan); margin-bottom: 6px; letter-spacing: 1px; font-weight: bold; }
     .post-content { color: var(--text-dim); line-height: 1.7; font-size: 12px; }
+    .post-content a {
+  color: var(--cyan);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.post-content a:hover {
+  color: var(--purple-light);
+}
 
     .empty-posts { text-align: center; color: var(--text-dim); font-size: 11px; letter-spacing: 2px; padding: 20px; border: 1px solid var(--border); }
 
@@ -574,6 +584,20 @@
     const d = ts.toDate ? ts.toDate() : new Date(ts);
     return d.toLocaleDateString('it-IT',{day:'2-digit',month:'long',year:'numeric'}) + ' ▸ ' + d.toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
   }
+  function renderLinks(text) {
+  return String(text)
+    .split(/(\[[^\]\n]+\]\(https?:\/\/[^\s)]+\))/g)
+    .map(part => {
+      const match = part.match(/^\[([^\]\n]+)\]\((https?:\/\/[^\s)]+)\)$/);
+      if (!match) {
+        return escHtml(part).replace(/\n/g, '<br/>');
+      }
+      const label = escHtml(match[1]);
+      const url = match[2];
+      return `<a href="${escHtml(url)}" target="_blank" rel="noopener noreferrer">${label}</a>`;
+    })
+    .join('');
+}
 
   function renderPosts(docs) {
     const container = document.getElementById('postsContainer');
@@ -591,7 +615,8 @@
           <button class="post-delete" data-id="${docSnap.id}">× ELIMINA</button>
         </div>
         <div class="post-title">${escHtml(p.title)}</div>
-        <div class="post-content">${escHtml(p.content).replace(/\n/g,'<br/>')}</div>
+        <div class="post-content">${renderLinks(p.content)}</div>
+
       `;
       container.appendChild(card);
     });
